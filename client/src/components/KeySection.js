@@ -1,11 +1,11 @@
 import React from "react";
 
-const KeySection = () => {
+const KeySection = ({ onClick }) => {
     return (
-        <div>
-            
-        </div>
+        <button className="keys">
+            API Keys
+        </button>
     );
-}
+};
 
 export default KeySection;

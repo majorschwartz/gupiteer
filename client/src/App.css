@@ -26,8 +26,20 @@ body,
 }
 
 .resp-box {
-    max-height: calc(100vh - 120px);
+    max-height: calc(100vh - 144px);
+    width: 100%;
     overflow-y: scroll;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+}
+
+.resp-box pre {
+    padding: 10px;
+    white-space: pre-wrap;
+    white-space: -moz-pre-wrap;
+    white-space: -pre-wrap;
+    white-space: -o-pre-wrap;
+    word-wrap: break-word;
 }
 
 .flex-container {
@@ -40,9 +52,13 @@ body,
     display: flex;
 }
 
-.top-row .column,
-.bottom-row .column {
+.top-row .column {
     height: 60px;
+    flex-shrink: 0;
+}
+
+.bottom-row .column {
+    height: 80px;
     flex-shrink: 0;
 }
 
@@ -76,12 +92,23 @@ body,
     margin-right: 20px;
 }
 
-.title {
+.title, .keys {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100%;
     font-size: 20px;
+}
+
+.keys {
+    width: 100%;
+    border: none;
+    background-color: var(--background);
+    cursor: pointer;
+}
+
+.keys:hover {
+    background-color: #c5b3a0;
 }
 
 .switch {
@@ -138,4 +165,29 @@ input:checked + .slider:before {
 
 .slider.round:before {
     border-radius: 50%;
+}
+
+.prompt-comps {
+    display: flex;
+    height: 80px;
+}
+
+.prompt-button {
+    width: 80px;
+    font-size: 30px;
+    background-color: #c5b3a0;
+}
+
+.prompt-box {
+    height: 75px;
+    padding: 8px;
+    flex-grow: 1;
+    background-color: var(--background);
+    outline: none;
+    font-size: 16px;
+    resize: none;
+}
+
+.prompt-button, .prompt-box {
+    border: none;
 }

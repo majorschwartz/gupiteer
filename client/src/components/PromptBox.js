@@ -34,15 +34,15 @@ const PromptBox = ({ model, prompt, setPrompt, setResp }) => {
     
     return (
         <div>
-            <form onSubmit={callAPI}>
+            <form onSubmit={callAPI} className="prompt-comps">
                 <textarea 
                     className="prompt-box"
                     onChange={(e) => {
                         setPrompt(e.target.value);
                     }}
                 ></textarea>
-                <button>
-                    Call API
+                <button className="prompt-button">
+                    &rarr;
                 </button>
             </form>
         </div>
