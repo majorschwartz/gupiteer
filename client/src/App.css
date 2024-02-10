@@ -10,22 +10,24 @@ body,
     font-family: "Poppins", sans-serif;
 
     --text: rgb(15, 15, 15);
-    /* --background: rgb(230, 230, 230);
-    --primary: rgb(219, 219, 219);
-    --highlight: rgb(175, 175, 175); */
     --background: #e3ceb9;
     --border: #76583a;
 }
 
 .App {
     width: 100%;
-    overflow: hidden;
     position: fixed;
+    overflow: hidden;
     background-color: var(--background);
 }
 
 * {
     box-sizing: border-box;
+}
+
+.resp-box {
+    max-height: calc(100vh - 120px);
+    overflow-y: scroll;
 }
 
 .flex-container {
@@ -72,4 +74,68 @@ body,
 
 .bar-options div {
     margin-right: 20px;
+}
+
+.title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    font-size: 20px;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #989898;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+}
+
+input:checked + .slider {
+    background-color: #2196f3;
+}
+
+input:focus + .slider {
+    box-shadow: 0 0 1px #2196f3;
+}
+
+input:checked + .slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+/* Rounded sliders */
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
 }

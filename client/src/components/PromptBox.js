@@ -1,12 +1,14 @@
 import React from "react";
 
-const PromptBox = ({ prompt, setPrompt, setResp }) => {
+const PromptBox = ({ model, prompt, setPrompt, setResp }) => {
     async function callAPI(event) {
         event.preventDefault();
 
         try {
-            var model = "gpt-3.5-turbo";
             var context = "";
+            console.log("\nModel: " + model +
+                "\n\nPrompt: " + prompt +
+                "\n\nContext: " + context)
             
             const response = await fetch("http://127.0.0.1:5000/api/submit", {
                 method: "POST",

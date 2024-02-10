@@ -8,7 +8,8 @@ import ResponseBox from "./components/ResponseBox";
 
 function App() {
     var tester = ""
-    const [model, setModel] = useState("");
+    const [context, setContext] = useState([]);
+    const [model, setModel] = useState("gpt-3.5");
     const [resp, setResp] = useState("Pending...");
     const [prompt, setPrompt] = useState("");
 
@@ -35,7 +36,7 @@ function App() {
                 <div className="row bottom-row">
                     <div className="column first-column">5</div>
                     <div className="column second-column">
-                        <PromptBox prompt={prompt} setPrompt={setPrompt} setResp={setResp} />
+                        <PromptBox model={model} prompt={prompt} setPrompt={setPrompt} setResp={setResp} />
                     </div>
                 </div>
             </div>

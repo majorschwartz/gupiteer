@@ -3,7 +3,7 @@ import React, { useState } from "react";
 const ModelDrop = ({ model, setModel }) => {
     return (
         <div>
-            Model Drop
+            <div>Model Drop</div>
             <div>
                 <select value={model} onChange={(e) => {
                     setModel(e.target.value);

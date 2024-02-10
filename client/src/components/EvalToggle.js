@@ -3,7 +3,11 @@ import React from "react";
 const EvalToggle = () => {
     return (
         <div>
-            Eval Toggle
+            <div>Eval Toggle</div>
+            <label class="switch">
+                <input type="checkbox" />
+                <span class="slider round"></span>
+            </label>
         </div>
     );
 }

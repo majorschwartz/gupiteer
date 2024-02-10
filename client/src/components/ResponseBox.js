@@ -3,9 +3,11 @@ import React from "react";
 const ResponseBox = ({ resp }) => {
     console.log(resp);
     return (
-        <pre>
-            {resp}
-        </pre>
+        <div className="resp-box">
+            <pre className="">
+                {resp}
+            </pre>
+        </div>
     );
 }
 

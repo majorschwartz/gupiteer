@@ -1,6 +1,6 @@
 import React from "react";
 
-const Topbar = () => {
+const Response = () => {
     return (
         <div>
             
@@ -8,4 +8,4 @@ const Topbar = () => {
     );
 }
 
-export default Topbar;
+export default Response;

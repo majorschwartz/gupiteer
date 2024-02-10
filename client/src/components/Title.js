@@ -2,8 +2,8 @@ import React from "react";
 
 const Title = () => {
     return (
-        <div>
-            Gupiteer
+        <div className="title">
+            <div>Gupiteer</div>
         </div>
     );
 }
