@@ -65,3 +65,11 @@ body,
     flex: none;
     border-right: 2px solid var(--border);
 }
+
+.bar-options {
+    display: flex;
+}
+
+.bar-options div {
+    margin-right: 20px;
+}

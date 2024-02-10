@@ -1,7 +1,7 @@
 import "./App.css";
+import EvalToggle from "./components/EvalToggle";
+import ModelDrop from "./components/ModelDrop";
 import Title from "./components/Title";
-// import Main from "./components/Main";
-// import Sidebar from "./components/Sidebar";
 
 function App() {
     return (
@@ -11,7 +11,12 @@ function App() {
                     <div class="column first-column">
                         <Title />
                     </div>
-                    <div class="column">2</div>
+                    <div class="column">
+                        <div className="bar-options">
+                            <ModelDrop />
+                            <EvalToggle />
+                        </div>
+                    </div>
                 </div>
                 <div class="row middle-row">
                     <div class="column first-column">3</div>
