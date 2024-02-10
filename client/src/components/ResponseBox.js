@@ -1,10 +1,11 @@
 import React from "react";
 
-const ResponseBox = () => {
+const ResponseBox = ({ resp }) => {
+    console.log(resp);
     return (
-        <div>
-            
-        </div>
+        <pre>
+            {resp}
+        </pre>
     );
 }
 
