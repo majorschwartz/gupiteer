@@ -1,24 +1,17 @@
 import React, { useState } from "react";
 
-const ModelDrop = () => {
-    const [selectedValue, setSelectedValue] = useState('');
-
-    const handleChange = (event) => {
-        setSelectedValue(event.target.value);
-    }
-    
+const ModelDrop = ({ model, setModel }) => {
     return (
         <div>
             Model Drop
             <div>
-                <select value={selectedValue} onChange={handleChange}>
-                    <option value="">Select an option</option>
-                    <option value="option1">Option 1</option>
-                    <option value="option2">Option 2</option>
-                    <option value="option3">Option 3</option>
-                    
+                <select value={model} onChange={(e) => {
+                    setModel(e.target.value);
+                }}>
+                    <option value="gpt-3.5">GPT 3.5</option>
+                    <option value="gpt-3.5-turbo">GPT 3.5 Turbo</option>
+                    <option value="gpt-4">GPT 4</option>
                 </select>
-                {selectedValue && <div>You selected: {selectedValue}</div>}
             </div>
         </div>
     );

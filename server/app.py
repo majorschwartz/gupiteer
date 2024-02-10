@@ -31,10 +31,7 @@ def prompt_gpt(model, prompt, context, evaluation):
 
     response = completion.choices[0].message.content
     print(response)
-
-    # response = response.replace("\n", "<br />")
-    print(response)
-
+    
     return response
 
 @app.route('/api/submit', methods=['POST'])

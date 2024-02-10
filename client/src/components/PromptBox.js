@@ -1,12 +1,11 @@
 import React from "react";
 
-const PromptBox = ({ setResp }) => {
+const PromptBox = ({ prompt, setPrompt, setResp }) => {
     async function callAPI(event) {
         event.preventDefault();
 
         try {
             var model = "gpt-3.5-turbo";
-            var prompt = "Give me a haiku about coding.";
             var context = "";
             
             const response = await fetch("http://127.0.0.1:5000/api/submit", {
@@ -34,7 +33,12 @@ const PromptBox = ({ setResp }) => {
     return (
         <div>
             <form onSubmit={callAPI}>
-                <textarea></textarea>
+                <textarea 
+                    className="prompt-box"
+                    onChange={(e) => {
+                        setPrompt(e.target.value);
+                    }}
+                ></textarea>
                 <button>
                     Call API
                 </button>
