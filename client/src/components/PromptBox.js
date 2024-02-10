@@ -34,6 +34,7 @@ const PromptBox = ({ setResp }) => {
     return (
         <div>
             <form onSubmit={callAPI}>
+                <textarea></textarea>
                 <button>
                     Call API
                 </button>
