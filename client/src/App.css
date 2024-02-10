@@ -10,26 +10,18 @@ body,
     font-family: "Poppins", sans-serif;
 
     --text: rgb(15, 15, 15);
-    --background: rgb(244, 244, 244);
+    /* --background: rgb(230, 230, 230);
     --primary: rgb(219, 219, 219);
-    --secondary: rgb(235, 135, 135);
-    --accent: rgb(234, 79, 79);
+    --highlight: rgb(175, 175, 175); */
+    --background: #e3ceb9;
+    --border: #76583a;
 }
 
-:root {
-    --text: rgb(15, 15, 15);
-    --background: rgb(244, 244, 244);
-    --primary: rgb(219, 219, 219);
-    --highlight: rgb(175, 175, 175);
-    --secondary: rgb(235, 135, 135);
-    --accent: rgb(234, 79, 79);
-    --correct: rgb(175, 225, 187);
-
-    --text-dark: rgb(240, 240, 240);
-    --background-dark: rgb(0, 0, 0);
-    --primary-dark: rgb(36, 36, 36);
-    --secondary-dark: rgb(118, 20, 20);
-    --accent-dark: rgb(178, 21, 21);
+.App {
+    width: 100%;
+    overflow: hidden;
+    position: fixed;
+    background-color: var(--background);
 }
 
 * {
@@ -40,50 +32,36 @@ body,
     display: flex;
     flex-direction: column;
     height: 100vh;
-  }
-  
-  .row {
+}
+
+.row {
     display: flex;
-  }
-  
-  .top-row .column, .bottom-row .column {
+}
+
+.top-row .column,
+.bottom-row .column {
     height: 60px;
     flex-shrink: 0;
-  }
+}
 
-  .middle-row {
+.top-row {
+    border-bottom: 2px solid var(--border);
+}
+
+.bottom-row {
+    border-top: 2px solid var(--border);
+}
+
+.middle-row {
     flex-grow: 1;
-  }
-  
-  .column {
+}
+
+.column {
     flex: 1;
-  }
-  
-  .first-column {
-    width: 100px;
+}
+
+.first-column {
+    width: 180px;
     flex: none;
-  }
-  
-  .num-one {
-    background-color: #F5F5F5;
-  }
-
-  .num-two {
-    background-color: #E7E7E7;
-  }
-
-  .num-three {
-    background-color: #DEDEDE;
-  }
-
-  .num-four {
-    background-color: #D1D1D1;
-  }
-
-  .num-five {
-    background-color: #F5F5F5;
-  }
-
-  .num-six {
-    background-color: #E7E7E7;
-  }
+    border-right: 2px solid var(--border);
+}
