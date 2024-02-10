@@ -1,0 +1,89 @@
+:root,
+html,
+body,
+* {
+    margin: 0;
+    padding: 0;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+
+    --text: rgb(15, 15, 15);
+    --background: rgb(244, 244, 244);
+    --primary: rgb(219, 219, 219);
+    --secondary: rgb(235, 135, 135);
+    --accent: rgb(234, 79, 79);
+}
+
+:root {
+    --text: rgb(15, 15, 15);
+    --background: rgb(244, 244, 244);
+    --primary: rgb(219, 219, 219);
+    --highlight: rgb(175, 175, 175);
+    --secondary: rgb(235, 135, 135);
+    --accent: rgb(234, 79, 79);
+    --correct: rgb(175, 225, 187);
+
+    --text-dark: rgb(240, 240, 240);
+    --background-dark: rgb(0, 0, 0);
+    --primary-dark: rgb(36, 36, 36);
+    --secondary-dark: rgb(118, 20, 20);
+    --accent-dark: rgb(178, 21, 21);
+}
+
+* {
+    box-sizing: border-box;
+}
+
+.flex-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+  }
+  
+  .row {
+    display: flex;
+  }
+  
+  .top-row .column, .bottom-row .column {
+    height: 60px;
+    flex-shrink: 0;
+  }
+
+  .middle-row {
+    flex-grow: 1;
+  }
+  
+  .column {
+    flex: 1;
+  }
+  
+  .first-column {
+    width: 100px;
+    flex: none;
+  }
+  
+  .num-one {
+    background-color: #F5F5F5;
+  }
+
+  .num-two {
+    background-color: #E7E7E7;
+  }
+
+  .num-three {
+    background-color: #DEDEDE;
+  }
+
+  .num-four {
+    background-color: #D1D1D1;
+  }
+
+  .num-five {
+    background-color: #F5F5F5;
+  }
+
+  .num-six {
+    background-color: #E7E7E7;
+  }
