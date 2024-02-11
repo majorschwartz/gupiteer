@@ -13,8 +13,8 @@ function App() {
     const [model, setModel] = useState("gpt-3.5-turbo");
     const [evaluate, setEval] = useState(false);
     const [respList, setRespList] = useState([
-        // {user: true, response: "This is a question.", eval_score: 0, model: "GPT-4"},
-        // {user: false, response: "This is a response.", eval_score: 1, model: "GPT-4"}
+        {user: true, response: "This is a question.", eval_score: 0, model: "GPT-4"},
+        {user: false, response: "This is a response.", eval_score: 1, model: "GPT-4"}
     ]);
     const [prompt, setPrompt] = useState("");
     const [modalState, toggleModal] = useState(false);

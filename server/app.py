@@ -8,14 +8,7 @@ import os
 app = Flask(__name__)
 CORS(app)
 
-# Set your OpenAI API key in the .env
 openaiClient = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-
-# available_models = ['gpt-3.5-turbo',
-#                     'gpt-3.5-turbo-1106',
-#                     'gpt-4',
-#                     'gpt-4-1106-preview']
-# gpt_model = available_models[1]
 
 def prompt_gpt(model, prompt, context, evaluation):
 
@@ -31,21 +24,20 @@ def prompt_gpt(model, prompt, context, evaluation):
 
     response = completion.choices[0].message.content
     print(response)
-
     return response
 
 @app.route('/api/submit', methods=['POST'])
 def submit_data():
     try:
         data = request.get_json()
-        model = data.get('model', '')
+        model = data.get('model', 'gpt-3.5-turbo')
+        evaluate = data.get('evaluate', False)
         prompt = data.get('prompt', '')
-        context = data.get('context', '')
+        respList = data.get('respList', [])
 
-        gen_response = prompt_gpt(model, prompt, context, False)
-        
+        print(respList)
+        gen_response = prompt_gpt(model, False, prompt, respList)
         return jsonify(gen_response)
-
     except Exception as e:
         print(e)
         return e

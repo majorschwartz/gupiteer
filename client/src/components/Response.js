@@ -3,7 +3,7 @@ import React from "react";
 const Response = ({ user, response, eval_score, model }) => {
     return (
         <div className={"resp" + (user ? " user" : " system")}>
-            <div>
+            <div className="info-section">
                 <span className="model-tag">{model}</span>
                 {!user &&
                     <>
