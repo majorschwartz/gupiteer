@@ -10,10 +10,11 @@ import Modal from "./components/Modal";
 
 function App() {
     const [context, setContext] = useState([]);
-    const [model, setModel] = useState("gpt-3.5");
+    const [model, setModel] = useState("gpt-3.5-turbo");
+    const [evaluate, setEval] = useState(false);
     const [respList, setRespList] = useState([
-        {user: true, response: "This is a question.", eval_score: 0, model: "GPT-4"},
-        {user: false, response: "This is a response.", eval_score: 1, model: "GPT-4"}
+        // {user: true, response: "This is a question.", eval_score: 0, model: "GPT-4"},
+        // {user: false, response: "This is a response.", eval_score: 1, model: "GPT-4"}
     ]);
     const [prompt, setPrompt] = useState("");
     const [modalState, toggleModal] = useState(false);
@@ -29,7 +30,7 @@ function App() {
                     <div className="column second-column">
                         <div className="bar-options">
                             <ModelDrop model={model} setModel={setModel} />
-                            <EvalToggle />
+                            <EvalToggle evaluate={evaluate} setEval={setEval} />
                         </div>
                     </div>
                 </div>
@@ -46,7 +47,7 @@ function App() {
                         }} />
                     </div>
                     <div className="column second-column">
-                        <PromptBox model={model} prompt={prompt} setPrompt={setPrompt} setRespList={setRespList} />
+                        <PromptBox model={model} evaluate={evaluate} prompt={prompt} setPrompt={setPrompt} respList={respList} setRespList={setRespList} />
                     </div>
                 </div>
             </div>

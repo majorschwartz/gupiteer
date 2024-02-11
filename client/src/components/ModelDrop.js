@@ -8,9 +8,10 @@ const ModelDrop = ({ model, setModel }) => {
                 <select value={model} onChange={(e) => {
                     setModel(e.target.value);
                 }}>
-                    <option value="gpt-3.5">GPT 3.5</option>
-                    <option value="gpt-3.5-turbo">GPT 3.5 Turbo</option>
-                    <option value="gpt-4">GPT 4</option>
+                    <option value="gpt-3.5-turbo">GPT-3.5-Turbo</option>
+                    <option value="gpt-4">GPT-4</option>
+                    <option value="gpt-4-32k">GPT-4-32k</option>
+                    <option value="gpt-4-0125-preview">GPT-4-0125-Preview</option>
                 </select>
             </div>
         </div>

@@ -34,6 +34,19 @@ body,
     margin: 10px;
 }
 
+.resp {
+    margin-bottom: 15px;
+    padding-left: 10px;
+}
+
+.resp.user {
+    border-left: 4px solid green;
+}
+
+.resp.system {
+    border-left: 4px solid gray;
+}
+
 .resp pre {
     /* padding: 10px; */
     white-space: pre-wrap;
@@ -145,6 +158,13 @@ body,
     outline: none;
     width: 30px;
     height: 30px;
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--background);
+}
+
+.eval-toggle.on {
+    background-color: var(--border);
 }
 
 .prompt-comps {

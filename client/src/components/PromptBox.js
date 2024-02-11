@@ -1,21 +1,20 @@
 import React from "react";
 
-const PromptBox = ({ model, prompt, setPrompt, setRespList }) => {
-    async function callAPI(event) {
+const PromptBox = ({ model, evaluate, prompt, setPrompt, respList, setRespList }) => {
+    async function call_api(event) {
         event.preventDefault();
 
         try {
-            var context = "";
             console.log("\nModel: " + model +
                 "\n\nPrompt: " + prompt +
-                "\n\nContext: " + context)
+                "\n\nContext: ")
             
             const response = await fetch("http://127.0.0.1:5000/api/submit", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ model: model, prompt: prompt, context: context }),
+                body: JSON.stringify({ model: model, prompt: prompt }),
             });
 
             const result = await response.json();
@@ -31,10 +30,9 @@ const PromptBox = ({ model, prompt, setPrompt, setRespList }) => {
         }
     }
     
-    
     return (
         <div>
-            <form onSubmit={callAPI} className="prompt-comps">
+            <form onSubmit={call_api} className="prompt-comps">
                 <textarea 
                     className="prompt-box"
                     onChange={(e) => {
