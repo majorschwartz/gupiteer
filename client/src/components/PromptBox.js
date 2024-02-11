@@ -8,7 +8,7 @@ const PromptBox = ({ model, evaluate, prompt, setPrompt, respList, setRespList }
         var responses = structuredClone(respList);
         responses.push(givenPrompt);
         console.log(responses);
-        setRespList({...responses});
+        setRespList(...responses);
 
         try {
             console.log("\nModel: " + model +

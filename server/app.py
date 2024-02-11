@@ -12,6 +12,7 @@ openaiClient = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 def prompt_gpt(model="gpt-3.5-turbo", evaluation=False, prompt="", respList=[]):
     print(respList)
+    given_model = "gpt-3.5-turbo"
     super_content = "You are a chatbot. I will provide previous chat content below from our conversation. You will respond as well as you can given the question and context given. **DO NOT ADD PREFIXES TO YOUR RESPONSE (I.E. 'GPT Response').**\n\n"
     previous_context = "Previous chat content:\n\n"
     if len(respList) > 0:
@@ -34,8 +35,19 @@ def prompt_gpt(model="gpt-3.5-turbo", evaluation=False, prompt="", respList=[]):
             model=model
         )
         response = completion.choices[0].message.content
-    
-    generated_response = {'user': False, 'response': response, 'eval_score': 0.5, 'model': model}
+    elif model in ['mistral-7b', 'google-gemini']:
+        completion = openaiClient.chat.completions.create(
+            messages=[
+                {
+                    "role": "user",
+                    "content": super_content + previous_context + "\nPrompt: " + prompt,
+                }
+            ],
+            model=given_model
+        )
+        response = completion.choices[0].message.content
+
+    generated_response = {'user': False, 'response': response, 'eval_score': 0, 'model': model}
     print(generated_response)
     
     final_list = respList.copy()
@@ -52,7 +64,7 @@ def submit_data():
         respList = data.get('respList')
 
         print(respList)
-        gen_response = prompt_gpt(model, False, prompt, respList)
+        gen_response = prompt_gpt(model, evaluate, prompt, respList)
         return jsonify(gen_response)
     except Exception as e:
         print(e)
