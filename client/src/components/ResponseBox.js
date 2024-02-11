@@ -1,12 +1,12 @@
 import React from "react";
+import Response from "./Response";
 
-const ResponseBox = ({ resp }) => {
-    console.log(resp);
+const ResponseBox = ({ respList }) => {
     return (
         <div className="resp-box">
-            <pre className="">
-                {resp}
-            </pre>
+            {respList.length > 0 && respList.map(resp => (
+                <Response {...resp} />
+            ))}
         </div>
     );
 }

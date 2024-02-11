@@ -1,6 +1,6 @@
 import React from "react";
 
-const PromptBox = ({ model, prompt, setPrompt, setResp }) => {
+const PromptBox = ({ model, prompt, setPrompt, setRespList }) => {
     async function callAPI(event) {
         event.preventDefault();
 
@@ -23,7 +23,7 @@ const PromptBox = ({ model, prompt, setPrompt, setResp }) => {
             console.log(result);
 
             if (response.ok) {
-                setResp(result);
+                setRespList(result);
             }
 
         } catch (e) {
@@ -40,6 +40,7 @@ const PromptBox = ({ model, prompt, setPrompt, setResp }) => {
                     onChange={(e) => {
                         setPrompt(e.target.value);
                     }}
+                    placeholder="Enter your prompt..."
                 ></textarea>
                 <button className="prompt-button">
                     &rarr;

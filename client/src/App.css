@@ -31,10 +31,11 @@ body,
     overflow-y: scroll;
     -ms-overflow-style: none;
     scrollbar-width: none;
+    margin: 10px;
 }
 
-.resp-box pre {
-    padding: 10px;
+.resp pre {
+    /* padding: 10px; */
     white-space: pre-wrap;
     white-space: -moz-pre-wrap;
     white-space: -pre-wrap;
@@ -86,10 +87,12 @@ body,
 
 .bar-options {
     display: flex;
+    align-items: center;
+    height: 60px;
 }
 
-.bar-options div {
-    margin-right: 20px;
+.title {
+    background-color: #c5b3a0;
 }
 
 .title, .keys {
@@ -109,6 +112,39 @@ body,
 
 .keys:hover {
     background-color: #c5b3a0;
+}
+
+.model-comps, .eval-comps {
+    padding-left: 20px;
+    font-size: 20px;
+}
+
+.eval-text {
+    padding-right: 10px;
+}
+
+.model-select {
+    padding-left: 10px;
+    display: flex;
+    align-items: center;
+}
+
+.model-select select {
+    border-radius: 0;
+    background-color: var(--background);
+    border: 2px solid var(--border);
+    outline: none;
+    height: 30px;
+    width: 160px;
+}
+
+.eval-toggle {
+    border-radius: 0;
+    background-color: var(--background);
+    border: 2px solid var(--border);
+    outline: none;
+    width: 30px;
+    height: 30px;
 }
 
 .prompt-comps {
@@ -145,4 +181,12 @@ body,
 
 .model-comps, .eval-comps {
     display: flex;
+}
+
+.modal {
+    position: absolute;
+}
+
+.modal.hidden {
+    display: none;
 }

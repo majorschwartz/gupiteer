@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 
 const Modal = () => {
+    const [shown, setShown] = useState(false);
+    
     return (
-        <div>
-            
+        <div className={"modal" + (shown ? " shown" : " hidden")}>
+            HELLO
         </div>
     );
 }
