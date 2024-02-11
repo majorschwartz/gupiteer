@@ -10,21 +10,35 @@ CORS(app)
 
 openaiClient = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-def prompt_gpt(model, prompt, context, evaluation):
+def prompt_gpt(model="gpt-3.5-turbo", evaluation=False, prompt="", respList=[]):
+    previous_context = "Previous chat content:\n\n"
+    if len(respList) > 0:
+        for i in range(len(respList)-1):
+            if respList[i]['user']:
+                previous_context += f"#{i+1} User Prompt: " + respList[i]['response'] + "\n"
+            else:
+                previous_context += f"#{i} GPT Response: " + respList[i]['response'] + "\n"
 
-    completion = openaiClient.chat.completions.create(
-        messages=[
-            {
-                "role": "user",
-                "content": "Previous Context:\n" + context + "\n\nPrompt: " + prompt,
-            }
-        ],
-        model=model
-    )
+    print(previous_context)
 
-    response = completion.choices[0].message.content
-    print(response)
-    return response
+    if model in ['gpt-3.5-turbo', 'gpt-4', 'gpt-4-32k', 'gpt-4-0125-preview']:
+        completion = openaiClient.chat.completions.create(
+            messages=[
+                {
+                    "role": "user",
+                    "content": previous_context + "\nPrompt: " + prompt,
+                }
+            ],
+            model=model
+        )
+        response = completion.choices[0].message.content
+    
+    generated_response = {'user': False, 'response': response, 'eval_score': 0.5, 'model': model}
+    print(generated_response)
+    
+    final_list = respList.copy()
+    final_list.append(generated_response)
+    return final_list
 
 @app.route('/api/submit', methods=['POST'])
 def submit_data():
