@@ -2,9 +2,12 @@ import React from "react";
 
 const EvalToggle = () => {
     return (
-        <div className="eval-comps">
-            <div className="eval-text">Eval Toggle</div>
-            <input className="eval-toggle" type="checkbox" />
+        <div>
+            <label>Evaluation</label>
+            <label class="switch">
+                <input type="checkbox" />
+                <span class="slider round"></span>
+            </label>
         </div>
     );
 }
