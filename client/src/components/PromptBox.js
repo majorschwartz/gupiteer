@@ -4,33 +4,29 @@ const PromptBox = ({ model, evaluate, prompt, setPrompt, respList, setRespList }
     async function call_api(event) {
         event.preventDefault();
 
-        try {
-            var givenPrompt = {user: true, response: prompt, eval_score: 0, model: model};
-            var responses = JSON.parse(JSON.stringify(respList));
-            responses.push(givenPrompt);
-            console.log(responses);
-            setRespList(responses);
-        } catch (e) {
-            console.log(e);
-            console.log("\n\nIssues with adding the new prompt.\n\n");
-        }
+        var givenPrompt = {user: true, response: prompt, eval_score: 0, model: model};
+        var responses = structuredClone(respList);
+        responses.push(givenPrompt);
+        console.log(responses);
+        setRespList({...responses});
 
         try {
             console.log("\nModel: " + model +
                 "\n\nEvaluate: " + evaluate +
                 "\n\nPrompt: " + prompt +
-                "\n\nrespList: " + respList)
+                "\n\nrespList: " + responses)
             
             const response = await fetch("http://127.0.0.1:5000/api/submit", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*"
                 },
-                body: JSON.stringify({ model: model, evaluate: evaluate, prompt: prompt, respList: respList }),
+                body: JSON.stringify({ model: model, evaluate: evaluate, prompt: prompt, respList: responses }),
             });
 
             const result = await response.json();
-            console.log("Result:");
+            console.log("Result: ");
             console.log(result);
 
             if (response.ok) {

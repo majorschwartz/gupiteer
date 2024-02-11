@@ -11,13 +11,15 @@ CORS(app)
 openaiClient = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 def prompt_gpt(model="gpt-3.5-turbo", evaluation=False, prompt="", respList=[]):
+    print(respList)
+    super_content = "You are a chatbot. I will provide previous chat content below from our conversation. You will respond as well as you can given the question and context given. **DO NOT ADD PREFIXES TO YOUR RESPONSE (I.E. 'GPT Response').**\n\n"
     previous_context = "Previous chat content:\n\n"
     if len(respList) > 0:
-        for i in range(len(respList)-1):
+        for i in range(len(respList)):
             if respList[i]['user']:
-                previous_context += f"#{i+1} User Prompt: " + respList[i]['response'] + "\n"
+                previous_context += f"User Prompt: " + respList[i]['response'] + "\n"
             else:
-                previous_context += f"#{i} GPT Response: " + respList[i]['response'] + "\n"
+                previous_context += f"GPT Response: " + respList[i]['response'] + "\n"
 
     print(previous_context)
 
@@ -26,7 +28,7 @@ def prompt_gpt(model="gpt-3.5-turbo", evaluation=False, prompt="", respList=[]):
             messages=[
                 {
                     "role": "user",
-                    "content": previous_context + "\nPrompt: " + prompt,
+                    "content": super_content + previous_context + "\nPrompt: " + prompt,
                 }
             ],
             model=model
@@ -47,7 +49,7 @@ def submit_data():
         model = data.get('model', 'gpt-3.5-turbo')
         evaluate = data.get('evaluate', False)
         prompt = data.get('prompt', '')
-        respList = data.get('respList', [])
+        respList = data.get('respList')
 
         print(respList)
         gen_response = prompt_gpt(model, False, prompt, respList)
