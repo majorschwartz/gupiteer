@@ -29,8 +29,8 @@ body,
     max-height: calc(100vh - 144px);
     width: 100%;
     overflow-y: scroll;
-    -ms-overflow-style: none;  /* IE and Edge */
-    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 
 .resp-box pre {
@@ -186,8 +186,19 @@ input:checked + .slider:before {
     outline: none;
     font-size: 16px;
     resize: none;
+    overflow-y: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
 }
 
 .prompt-button, .prompt-box {
     border: none;
+}
+
+.prompt-button {
+    border-left: 2px solid var(--border);
+}
+
+.model-comps {
+    display: flex;
 }

@@ -2,11 +2,11 @@ import React from "react";
 
 const EvalToggle = () => {
     return (
-        <div>
-            <div>Eval Toggle</div>
-            <label class="switch">
+        <div className="eval-comps">
+            <div className="eval-text">Eval Toggle</div>
+            <label className="switch">
                 <input type="checkbox" />
-                <span class="slider round"></span>
+                <span className="slider round"></span>
             </label>
         </div>
     );

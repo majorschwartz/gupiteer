@@ -2,9 +2,9 @@ import React, { useState } from "react";
 
 const ModelDrop = ({ model, setModel }) => {
     return (
-        <div>
-            <div>Model Drop</div>
-            <div>
+        <div className="model-comps">
+            <div className="model-name">Model Drop</div>
+            <div className="model-select">
                 <select value={model} onChange={(e) => {
                     setModel(e.target.value);
                 }}>
