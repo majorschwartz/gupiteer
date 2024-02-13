@@ -11,6 +11,7 @@ import KeySection from "./components/KeySection";
 import Modal from "./components/Modal";
 
 
+//function sections
 function App() {
     const [context, setContext] = useState([]);
     const [model, setModel] = useState("gpt-3.5-turbo");
