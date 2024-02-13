@@ -20,8 +20,7 @@ function App() {
         // {user: true, response: "This is a question.", eval_score: 0, model: "GPT-4"},
         // {user: false, response: "This is a response.", eval_score: 1, model: "GPT-4"}
     ]);
-    const [prompt, setPrompt] = useState("");
-    const [modalState, toggleModal] = useState(false);
+    
 //return sections
     return (
         <div className="App">
