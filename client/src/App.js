@@ -1,3 +1,5 @@
+//import sections 
+
 import React, { useState } from "react";
 import "./App.css";
 import EvalToggle from "./components/EvalToggle";
@@ -7,6 +9,7 @@ import Title from "./components/Title";
 import ResponseBox from "./components/ResponseBox";
 import KeySection from "./components/KeySection";
 import Modal from "./components/Modal";
+
 
 function App() {
     const [context, setContext] = useState([]);
