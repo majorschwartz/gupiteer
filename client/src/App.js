@@ -22,7 +22,7 @@ function App() {
     ]);
     const [prompt, setPrompt] = useState("");
     const [modalState, toggleModal] = useState(false);
-
+//return sections
     return (
         <div className="App">
             <Modal />
