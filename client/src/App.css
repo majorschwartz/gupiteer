@@ -209,14 +209,3 @@ body,
     border-left: 2px solid var(--border);
 }
 
-.model-comps, .eval-comps {
-    display: flex;
-}
-
-.modal {
-    position: absolute;
-}
-
-.modal.hidden {
-    display: none;
-}
