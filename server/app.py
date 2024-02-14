@@ -35,7 +35,10 @@ def prompt_gpt(model="gpt-3.5-turbo", evaluation=False, prompt="", respList=[]):
             model=model
         )
         response = completion.choices[0].message.content
+    
+    # JUST AS DEMO!
     elif model in ['mistral-7b', 'google-gemini']:
+        # Future completion project!
         completion = openaiClient.chat.completions.create(
             messages=[
                 {
@@ -46,8 +49,10 @@ def prompt_gpt(model="gpt-3.5-turbo", evaluation=False, prompt="", respList=[]):
             model=given_model
         )
         response = completion.choices[0].message.content
+    # This is just an OpenAI grab right now!
 
     generated_response = {'user': False, 'response': response, 'eval_score': 0, 'model': model}
+    
     print(generated_response)
     
     final_list = respList.copy()
