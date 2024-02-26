@@ -5,6 +5,7 @@ const Modal = () => {
     
     return (
         <div className={"modal" + (shown ? " shown" : " hidden")}>
+            Modal placeholder.
         </div>
     );
 }
