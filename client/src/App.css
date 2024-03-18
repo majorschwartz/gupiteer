@@ -25,6 +25,10 @@ body,
     box-sizing: border-box;
 }
 
+::placeholder {
+    color: var(--border);
+}
+
 .resp-box {
     max-height: calc(100vh - 144px);
     width: 100%;
@@ -118,7 +122,8 @@ body,
     background-color: #c5b3a0;
 }
 
-.title, .keys {
+.title,
+.keys {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -137,7 +142,8 @@ body,
     background-color: #c5b3a0;
 }
 
-.model-comps, .eval-comps {
+.model-comps,
+.eval-comps {
     padding-left: 20px;
     font-size: 20px;
 }
@@ -163,6 +169,7 @@ body,
 
 .eval-toggle {
     border-radius: 0;
+    cursor: pointer;
     background-color: var(--background);
     border: 2px solid var(--border);
     outline: none;
@@ -201,7 +208,8 @@ body,
     scrollbar-width: none;
 }
 
-.prompt-button, .prompt-box {
+.prompt-button,
+.prompt-box {
     border: none;
 }
 
@@ -209,14 +217,83 @@ body,
     border-left: 2px solid var(--border);
 }
 
-.model-comps, .eval-comps {
+.model-comps,
+.eval-comps {
     display: flex;
 }
 
 .modal {
     position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.3);
 }
 
 .modal.hidden {
     display: none;
+}
+
+.modal-box {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: var(--background);
+    padding: 20px;
+    border: 2px solid var(--border);
+}
+
+.modal-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    font-size: 22px;
+}
+
+.modal-close {
+    border-radius: 0;
+    cursor: pointer;
+    background-color: var(--border);
+    border: 2px solid var(--border);
+    outline: none;
+    width: 30px;
+    height: 30px;
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--background);
+}
+
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    width: 350px;
+}
+
+.modal-content div {
+    margin-bottom: 10px;
+    display: flex;
+    gap: 10px;
+}
+
+.modal-content div input {
+    border-radius: 0;
+    background-color: var(--background);
+    border: 2px solid var(--border);
+    outline: none;
+    height: 30px;
+    flex-grow: 1;
+    padding-left: 6px;
+    font-family: monospace;
 }

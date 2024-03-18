@@ -1,10 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
+import Modal from "./Modal";
 
-const KeySection = ({ onClick }) => {
+const KeySection = ({ keys, setKeys }) => {
+    const [shown, setShown] = useState(false);
+    function toggleModal() {
+        setShown(!shown);
+    }
+
     return (
-        <button className="keys">
-            API Keys
-        </button>
+        <>
+            <button className="keys" onClick={toggleModal}>
+                API Keys
+            </button>
+            <Modal
+                shown={shown}
+                setShown={setShown}
+                keys={keys}
+                setKeys={setKeys}
+            />
+        </>
     );
 };
 

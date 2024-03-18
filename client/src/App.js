@@ -9,16 +9,19 @@ import KeySection from "./components/KeySection";
 import Modal from "./components/Modal";
 
 function App() {
+    const [keys, setKeys] = useState({
+        "openai-key": "",
+        "gemini-key": "",
+        "anthropic-key": "",
+    });
     const [context, setContext] = useState([]);
     const [model, setModel] = useState("gpt-3.5-turbo");
     const [evaluate, setEval] = useState(false);
     const [respList, setRespList] = useState([]);
     const [prompt, setPrompt] = useState("");
-    const [modalState, toggleModal] = useState(false);
 
     return (
         <div className="App">
-            <Modal />
             <div className="flex-container">
                 <div className="row top-row">
                     <div className="column first-column">
@@ -39,12 +42,17 @@ function App() {
                 </div>
                 <div className="row bottom-row">
                     <div className="column first-column">
-                        <KeySection onClick={() => {
-                            toggleModal(false)
-                        }} />
+                        <KeySection keys={keys} setKeys={setKeys} />
                     </div>
                     <div className="column second-column">
-                        <PromptBox model={model} evaluate={evaluate} prompt={prompt} setPrompt={setPrompt} respList={respList} setRespList={setRespList} />
+                        <PromptBox
+                            model={model}
+                            evaluate={evaluate}
+                            prompt={prompt}
+                            setPrompt={setPrompt}
+                            respList={respList}
+                            setRespList={setRespList}
+                        />
                     </div>
                 </div>
             </div>

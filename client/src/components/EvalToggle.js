@@ -5,11 +5,16 @@ const EvalToggle = ({ evaluate, setEval }) => {
         setEval(!evaluate);
         console.log(evaluate);
     }
-    
+
     return (
         <div className="eval-comps">
             <div className="eval-text">Evaluation</div>
-            <button className={"eval-toggle" + (evaluate ? " on" : " off")} onClick={updateEval}>X</button>
+            <button
+                className={"eval-toggle" + (evaluate ? " on" : " off")}
+                onClick={updateEval}
+            >
+                X
+            </button>
         </div>
     );
 };
