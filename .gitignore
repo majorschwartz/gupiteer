@@ -3,6 +3,12 @@
 # api keys
 .env
 
+# media
+/media
+
+# ideas
+proj.txt
+
 # dependencies
 /node_modules
 /.pnp
