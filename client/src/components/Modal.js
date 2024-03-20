@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 const Modal = ({ shown, setShown, keys, setKeys }) => {
     const givenKeys = { ...keys };
@@ -25,7 +25,7 @@ const Modal = ({ shown, setShown, keys, setKeys }) => {
                 </div>
                 <div className="modal-content">
                     <div>
-                        OpenAI API Key:{" "}
+                        <span className="key-text">OpenAI API Key: </span>
                         <input
                             type="text"
                             id="openai-key"
@@ -37,7 +37,7 @@ const Modal = ({ shown, setShown, keys, setKeys }) => {
                         />
                     </div>
                     <div>
-                        Gemini API Key:{" "}
+                        <span className="key-text">Gemini API Key: </span>
                         <input
                             type="text"
                             id="gemini-key"
@@ -49,11 +49,11 @@ const Modal = ({ shown, setShown, keys, setKeys }) => {
                         />
                     </div>
                     <div>
-                        Anthropic API Key:{" "}
+                        <span className="key-text">Anthropic API Key: </span>
                         <input
                             type="text"
                             id="anthropic-key"
-                            placeholder="sk-ant-api03-"
+                            placeholder="sk-ant-api03-..."
                             onChange={(e) => {
                                 givenKeys["anthropic-key"] = e.target.value;
                                 setKeys(givenKeys);
