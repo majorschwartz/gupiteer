@@ -1,4 +1,5 @@
 import React from "react";
+import loading from "../imgs/load.gif";
 
 const Response = ({ user, response, eval_score, model }) => {
     return (
@@ -10,7 +11,14 @@ const Response = ({ user, response, eval_score, model }) => {
                         <span className="eval-tag">{eval_score}</span> */}
                 </div>
             )}
-            <pre>{response}</pre>
+            {!response && (
+                <div className="loading">
+                    <img src={loading} alt="loading" />
+                </div>
+            )}
+            {response && (
+                <pre className="response">{response}</pre>
+            )}
         </div>
     );
 };

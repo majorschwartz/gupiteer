@@ -298,3 +298,13 @@ body,
     padding-left: 6px;
     font-family: monospace;
 }
+
+.loading {
+    display: flex;
+    align-items: center;
+}
+
+.loading img {
+    width: 20px;
+    height: 20px;
+}

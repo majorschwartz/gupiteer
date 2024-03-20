@@ -17,10 +17,18 @@ const PromptBox = ({
             eval_score: 0,
             model: model,
         };
+        var pending = {
+            user: false,
+            response: false,
+            eval_score: 0,
+            model: model,
+        };
+
         var responses = structuredClone(respList);
         responses.push(givenPrompt);
-        console.log(responses);
-        setRespList(...responses);
+        var pending_list = structuredClone(responses);
+        pending_list.push(pending);
+        setRespList(pending_list);
 
         try {
             console.log(
