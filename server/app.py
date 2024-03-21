@@ -1,14 +1,21 @@
 import time
+from dotenv import load_dotenv
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from openai import OpenAI
+import google.generativeai as genai
+import pathlib
+import textwrap
 import json
 import os
 
 app = Flask(__name__)
 CORS(app)
 
+load_dotenv()
+
 openaiClient = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
 
 def prompt_gpt(model="gpt-3.5-turbo", evaluation=False, prompt="", respList=[]):
     print(respList)
