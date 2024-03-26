@@ -1,7 +1,17 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 const Modal = ({ shown, setShown, keys, setKeys }) => {
-    const givenKeys = { ...keys };
+    const givenKeys = [ ...keys ];
+
+    useEffect(() => {
+        console.log("Keys: ", givenKeys);
+
+        for (let i = 0; i < givenKeys.length; i++) {
+            if (givenKeys[i]['valid'] == false) {
+                console.log("Invalid key: ", givenKeys[i]);
+            }
+        }
+    }, [givenKeys]);
 
     return (
         <div className={"modal" + (shown ? " shown" : " hidden")}>
@@ -31,7 +41,7 @@ const Modal = ({ shown, setShown, keys, setKeys }) => {
                             id="openai-key"
                             placeholder="sk-..."
                             onChange={(e) => {
-                                givenKeys["openai-key"] = e.target.value;
+                                givenKeys[0]["openai-key"] = e.target.value;
                                 setKeys(givenKeys);
                             }}
                         />
@@ -43,7 +53,7 @@ const Modal = ({ shown, setShown, keys, setKeys }) => {
                             id="gemini-key"
                             placeholder="..."
                             onChange={(e) => {
-                                givenKeys["gemini-key"] = e.target.value;
+                                givenKeys[1]["gemini-key"] = e.target.value;
                                 setKeys(givenKeys);
                             }}
                         />
@@ -55,7 +65,7 @@ const Modal = ({ shown, setShown, keys, setKeys }) => {
                             id="anthropic-key"
                             placeholder="sk-ant-api03-..."
                             onChange={(e) => {
-                                givenKeys["anthropic-key"] = e.target.value;
+                                givenKeys[2]["anthropic-key"] = e.target.value;
                                 setKeys(givenKeys);
                             }}
                         />

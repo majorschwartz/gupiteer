@@ -9,11 +9,11 @@ import KeySection from "./components/KeySection";
 import Modal from "./components/Modal";
 
 function App() {
-    const [keys, setKeys] = useState({
-        "openai-key": "",
-        "gemini-key": "",
-        "anthropic-key": "",
-    });
+    const [keys, setKeys] = useState([
+            {"openai-key": "", "valid": false},
+            {"gemini-key": "", "valid": false},
+            {"anthropic-key": "", "valid": false},
+    ]);
     const [context, setContext] = useState([]);
     const [model, setModel] = useState("gpt-3.5-turbo");
     const [evaluate, setEval] = useState(false);
