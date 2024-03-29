@@ -9,6 +9,7 @@ const Modal = ({ shown, setShown, keys, setKeys }) => {
         for (let i = 0; i < givenKeys.length; i++) {
             if (givenKeys[i]['valid'] == false) {
                 console.log("Invalid key: ", givenKeys[i]);
+                // Update keys
             }
         }
     }, [givenKeys]);
