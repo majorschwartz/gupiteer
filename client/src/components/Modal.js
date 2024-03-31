@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 
 const Modal = ({ shown, setShown, keys, setKeys }) => {
     const givenKeys = [ ...keys ];
+    // Necessary?
 
     useEffect(() => {
         console.log("Keys: ", givenKeys);
