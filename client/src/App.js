@@ -6,7 +6,7 @@ import PromptBox from "./components/PromptBox";
 import Title from "./components/Title";
 import ResponseBox from "./components/ResponseBox";
 import KeySection from "./components/KeySection";
-import Modal from "./components/Modal";
+// import Modal from "./components/Modal";
 
 function App() {
     const [keys, setKeys] = useState([
@@ -14,7 +14,7 @@ function App() {
             {"gemini-key": "", "valid": false},
             {"anthropic-key": "", "valid": false},
     ]);
-    const [context, setContext] = useState([]);
+    // const [context, setContext] = useState([]);
     const [model, setModel] = useState("gpt-3.5-turbo");
     const [evaluate, setEval] = useState(false);
     const [respList, setRespList] = useState([]);

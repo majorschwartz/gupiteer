@@ -1,19 +1,19 @@
-import React, { useEffect } from "react";
+import React from "react";
 
 const Modal = ({ shown, setShown, keys, setKeys }) => {
     const givenKeys = [...keys];
     // Necessary?
 
-    useEffect(() => {
-        console.log("Keys: ", givenKeys);
+    // useEffect(() => {
+    //     console.log("Keys: ", givenKeys);
 
-        for (let i = 0; i < givenKeys.length; i++) {
-            if (givenKeys[i]["valid"] == false) {
-                console.log("Invalid key: ", givenKeys[i]);
-                // Update keys
-            }
-        }
-    }, [givenKeys]);
+    //     for (let i = 0; i < givenKeys.length; i++) {
+    //         if (givenKeys[i]["valid"] == false) {
+    //             console.log("Invalid key: ", givenKeys[i]);
+    //             // Update keys
+    //         }
+    //     }
+    // }, [givenKeys]);
 
     return (
         <div className={"modal" + (shown ? " shown" : " hidden")}>

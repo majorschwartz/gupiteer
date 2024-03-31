@@ -12,10 +12,9 @@ import os
 app = Flask(__name__)
 CORS(app)
 
-load_dotenv()
+# load_dotenv()
 
-# openaiClient = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-# genai.configure(api_key=os.getenv("GOOGLE_API_KEY"))
+# genai.configure(api_key=os.getenv(""))
 
 def prompt_gpt(model="gpt-3.5-turbo", evaluation=False, prompt="", respList=[], keys=None):
     openai_key = keys[0]['openai-key']
