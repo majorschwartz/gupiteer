@@ -1,14 +1,14 @@
 import React, { useEffect } from "react";
 
 const Modal = ({ shown, setShown, keys, setKeys }) => {
-    const givenKeys = [ ...keys ];
+    const givenKeys = [...keys];
     // Necessary?
 
     useEffect(() => {
         console.log("Keys: ", givenKeys);
 
         for (let i = 0; i < givenKeys.length; i++) {
-            if (givenKeys[i]['valid'] == false) {
+            if (givenKeys[i]["valid"] == false) {
                 console.log("Invalid key: ", givenKeys[i]);
                 // Update keys
             }
@@ -42,6 +42,7 @@ const Modal = ({ shown, setShown, keys, setKeys }) => {
                             type="text"
                             id="openai-key"
                             placeholder="sk-..."
+                            spellcheck="false"
                             onChange={(e) => {
                                 givenKeys[0]["openai-key"] = e.target.value;
                                 setKeys(givenKeys);
@@ -49,11 +50,16 @@ const Modal = ({ shown, setShown, keys, setKeys }) => {
                         />
                     </div>
                     <div>
-                        <span className="key-text">Gemini API Key: </span>
+                        <span className="key-text">
+                            <span className="coming-soon">Coming Soon</span>
+                            Gemini API Key:{" "}
+                        </span>
                         <input
+                            disabled
                             type="text"
                             id="gemini-key"
                             placeholder="..."
+                            spellcheck="false"
                             onChange={(e) => {
                                 givenKeys[1]["gemini-key"] = e.target.value;
                                 setKeys(givenKeys);
@@ -61,11 +67,16 @@ const Modal = ({ shown, setShown, keys, setKeys }) => {
                         />
                     </div>
                     <div>
-                        <span className="key-text">Anthropic API Key: </span>
+                        <span className="key-text">
+                            <span className="coming-soon">Coming Soon</span>
+                            Anthropic API Key:{" "}
+                        </span>
                         <input
+                            disabled
                             type="text"
                             id="anthropic-key"
                             placeholder="sk-ant-api03-..."
+                            spellcheck="false"
                             onChange={(e) => {
                                 givenKeys[2]["anthropic-key"] = e.target.value;
                                 setKeys(givenKeys);

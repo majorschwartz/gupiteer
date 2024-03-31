@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./App.css";
-import EvalToggle from "./components/EvalToggle";
+// import EvalToggle from "./components/EvalToggle";
 import ModelDrop from "./components/ModelDrop";
 import PromptBox from "./components/PromptBox";
 import Title from "./components/Title";
@@ -30,7 +30,7 @@ function App() {
                     <div className="column second-column">
                         <div className="bar-options">
                             <ModelDrop model={model} setModel={setModel} />
-                            <EvalToggle evaluate={evaluate} setEval={setEval} />
+                            {/* <EvalToggle evaluate={evaluate} setEval={setEval} /> */}
                         </div>
                     </div>
                 </div>
@@ -52,6 +52,7 @@ function App() {
                             setPrompt={setPrompt}
                             respList={respList}
                             setRespList={setRespList}
+                            keys={keys}
                         />
                     </div>
                 </div>

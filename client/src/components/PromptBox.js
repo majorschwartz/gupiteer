@@ -7,6 +7,7 @@ const PromptBox = ({
     setPrompt,
     respList,
     setRespList,
+    keys,
 }) => {
     async function call_api(event) {
         event.preventDefault();
@@ -53,6 +54,7 @@ const PromptBox = ({
                     evaluate: evaluate,
                     prompt: prompt,
                     respList: responses,
+                    keys: keys,
                 }),
             });
 
