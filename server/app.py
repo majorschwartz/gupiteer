@@ -21,21 +21,23 @@ def prompt_gpt(model="gpt-3.5-turbo", evaluation=False, prompt="", respList=[], 
     openai_key = keys[0]['openai-key']
     print(openai_key)
 
-    if (str(hashlib.md5(openai_key.encode()).hexdigest()) == "ecb7467312cc20314a7cc354a054645f"):
+    available_special_keys = ["ecb7467312cc20314a7cc354a054645f", "f29aad24e8f9e65587ff758ff92bb74d"]
+
+    if (str(hashlib.md5(openai_key.encode()).hexdigest()) in available_special_keys):
         openai_key = os.getenv("OPENAI_KEY_SPECIAL")
 
     openaiClient = OpenAI(api_key=openai_key)
 
     try:
         given_model = "gpt-3.5-turbo"
-        super_content = "You are a chatbot. I will provide previous chat content below from our conversation. You will respond as well as you can given the question and context given. **DO NOT ADD PREFIXES TO YOUR RESPONSE (I.E. 'GPT Response').**\n\n"
-        previous_context = "Previous chat content:\n\n"
+        super_context = "You are a chatbot. I will provide previous chat content below from our conversation. **IMPORTANT: DO NOT ADD PREFIXES TO YOUR RESPONSE (I.E. 'GPT Response', or 'Response'). ONLY RESPOND WITH YOUR RESPONSE AND NO PREFIX.**\n\n"
+        previous_context = "Previous chat content:\n"
         if len(respList) > 0:
             for i in range(len(respList)):
                 if respList[i]['user']:
-                    previous_context += f"User Prompt: " + respList[i]['response'] + "\n"
+                    previous_context += f"*User*: " + respList[i]['response'] + "\n"
                 else:
-                    previous_context += f"GPT Response: " + respList[i]['response'] + "\n"
+                    previous_context += f"*GPT*: " + respList[i]['response'] + "\n"
 
         print(previous_context)
 
@@ -44,7 +46,7 @@ def prompt_gpt(model="gpt-3.5-turbo", evaluation=False, prompt="", respList=[], 
                 messages=[
                     {
                         "role": "user",
-                        "content": super_content + previous_context + "\nPrompt: " + prompt,
+                        "content": super_context + previous_context + "\nNew Prompt: " + prompt,
                     }
                 ],
                 model=model
@@ -58,7 +60,7 @@ def prompt_gpt(model="gpt-3.5-turbo", evaluation=False, prompt="", respList=[], 
                 messages=[
                     {
                         "role": "user",
-                        "content": super_content + previous_context + "\nPrompt: " + prompt,
+                        "content": super_context + previous_context + "\nNew Prompt: " + prompt,
                     }
                 ],
                 model=given_model
