@@ -72,6 +72,7 @@ def prompt_gpt(model="gpt-3.5-turbo", evaluation=False, prompt="", respList=[], 
         generated_response = {'user': False, 'response': response, 'eval_score': 0, 'model': model}
 
         # Handle evaluation
+        # Write under
         
     except Exception as e:
         error_response = {'user': False, 'response': 'An error has occurred. Make sure you\'ve entered a valid API key, and try again.', 'eval_score': 0, 'model': model}
