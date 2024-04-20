@@ -53,8 +53,7 @@ def prompt_gpt(model="gpt-3.5-turbo", evaluation=False, prompt="", respList=[], 
             )
             response = completion.choices[0].message.content
         
-        # JUST AS DEMO!
-            # Implement
+        # Make implementation for Mistral-7b and Google Gemini
         elif model in ['mistral-7b', 'google-gemini']:
             # Future completion project!
             completion = openaiClient.chat.completions.create(
