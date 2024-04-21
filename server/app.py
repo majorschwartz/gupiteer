@@ -54,6 +54,8 @@ def prompt_gpt(model="gpt-3.5-turbo", evaluation=False, prompt="", respList=[], 
             response = completion.choices[0].message.content
         
         # Make implementation for Mistral-7b and Google Gemini
+        # model = genai.GenerativeModel('gemini-pro')
+        # response = model.generate_content("What is the meaning of life?")
         elif model in ['mistral-7b', 'google-gemini']:
             # Future completion project!
             completion = openaiClient.chat.completions.create(
