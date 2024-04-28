@@ -6,7 +6,6 @@ import PromptBox from "./components/PromptBox";
 import Title from "./components/Title";
 import ResponseBox from "./components/ResponseBox";
 import KeySection from "./components/KeySection";
-// import Modal from "./components/Modal";
 
 function App() {
     const [keys, setKeys] = useState([
