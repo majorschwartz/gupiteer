@@ -3,6 +3,8 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from openai import OpenAI
 import google.generativeai as genai
+from dotenv import load_dotenv
+import anthropic
 import hashlib
 import pathlib
 import textwrap
@@ -12,12 +14,24 @@ import os
 app = Flask(__name__)
 CORS(app)
 
+load_dotenv()
+
 def print_request(request):
     print(f"\n| Model: {request['model']}\n| Evaluate: {request['evaluate']}\n| Prompt: {request['prompt']}\n| Chat Count: {len(request['respList'])}\n| Keys: {request['keys']}\n")
 
+def check_special(keys):
+    available_special_keys = ['fd6726729c81f4cbbf96fd37b93f28fc', 'f5d2cdd3f52f7c854c084c72742b2387', 'a1c7b80dcb74c12dceb34670a4e018c7']
+    key_list = ['openai-key', 'gemini-key', 'anthropic-key']
+    for i in range(len(keys)):
+        if str(hashlib.md5(keys[i][key_list[i]].encode()).hexdigest()) in available_special_keys:
+            keys[0]['openai-key'] = os.getenv('OPENAI_KEY_SPECIAL')
+            keys[1]['gemini-key'] = os.getenv('GEMINI_KEY_SPECIAL')
+            keys[2]['anthropic-key'] = os.getenv('ANTHROPIC_KEY_SPECIAL')
+    return keys
+
 def prompt_gpt(model="gpt-3.5-turbo", evaluation=False, prompt="", respList=[], keys=None):
     try:
-
+        keys = check_special(keys)
         # Getting context
         
         super_context = "You are a chatbot. I will provide previous chat content below from our conversation. **IMPORTANT: DO NOT ADD PREFIXES TO YOUR RESPONSE (I.E. 'GPT Response', or 'Response'). ONLY RESPOND WITH YOUR RESPONSE AND NO PREFIX.**\n\n"
@@ -30,6 +44,7 @@ def prompt_gpt(model="gpt-3.5-turbo", evaluation=False, prompt="", respList=[], 
                     previous_context += f"*GPT*: " + respList[i]['response'] + "\n"
 
         print(previous_context)
+        total_context = super_context + previous_context + "\nNew Prompt: " + prompt
 
         # Getting response
 
@@ -37,18 +52,13 @@ def prompt_gpt(model="gpt-3.5-turbo", evaluation=False, prompt="", respList=[], 
         if model in ['gpt-3.5-turbo', 'gpt-4', 'gpt-4-32k', 'gpt-4-0125-preview']:
             openai_key = keys[0]['openai-key']
 
-            available_special_keys = ["ecb7467312cc20314a7cc354a054645f", "f29aad24e8f9e65587ff758ff92bb74d"]
-
-            if (str(hashlib.md5(openai_key.encode()).hexdigest()) in available_special_keys):
-                openai_key = os.getenv("OPENAI_KEY_SPECIAL")
-
             openaiClient = OpenAI(api_key=openai_key)
             
             completion = openaiClient.chat.completions.create(
                 messages=[
                     {
                         "role": "user",
-                        "content": super_context + previous_context + "\nNew Prompt: " + prompt,
+                        "content": total_context,
                     }
                 ],
                 model=model
@@ -60,13 +70,27 @@ def prompt_gpt(model="gpt-3.5-turbo", evaluation=False, prompt="", respList=[], 
             genai.configure(api_key=keys[1]['gemini-key'])
 
             gemini = genai.GenerativeModel('gemini-pro')
-            completion = gemini.generate_content(prompt)
+            completion = gemini.generate_content(total_context)
 
             response = completion.text
         
-        # Mistral
-        elif model in ['mistral-7b']:
-            response = "This model is not yet supported."
+        # Anthropic
+        elif model in ['claude-3-opus-20240229', 'claude-3-sonnet-20240229', 'claude-3-haiku-20240307']:
+            client = anthropic.Anthropic(
+                api_key=keys[2]['anthropic-key'],
+            )
+            
+            completion = client.messages.create(
+                model=model,
+                max_tokens=512,
+                messages=[
+                    {
+                        "role": "user",
+                        "content": total_context,
+                    }
+                ]
+            )
+            response = completion.content[0].text
 
         generated_response = {'user': False, 'response': response, 'eval_score': 0, 'model': model}
         

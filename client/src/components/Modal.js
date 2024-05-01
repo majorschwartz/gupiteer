@@ -30,7 +30,8 @@ const Modal = ({ shown, setShown, keys, setKeys }) => {
                             type="text"
                             id="openai-key"
                             placeholder="sk-..."
-                            spellcheck="false"
+                            spellCheck="false"
+                            value={givenKeys[0]["openai-key"]}
                             onChange={(e) => {
                                 givenKeys[0]["openai-key"] = e.target.value;
                                 setKeys(givenKeys);
@@ -47,7 +48,8 @@ const Modal = ({ shown, setShown, keys, setKeys }) => {
                             type="text"
                             id="gemini-key"
                             placeholder="..."
-                            spellcheck="false"
+                            spellCheck="false"
+                            value={givenKeys[1]["gemini-key"]}
                             onChange={(e) => {
                                 givenKeys[1]["gemini-key"] = e.target.value;
                                 setKeys(givenKeys);
@@ -56,15 +58,16 @@ const Modal = ({ shown, setShown, keys, setKeys }) => {
                     </div>
                     <div>
                         <span className="key-text">
-                            <span className="coming-soon">Coming Soon</span>
+                            {/* <span className="coming-soon">Coming Soon</span> */}
                             Anthropic API Key:{" "}
                         </span>
                         <input
-                            disabled
+                            // disabled
                             type="text"
                             id="anthropic-key"
                             placeholder="sk-ant-api03-..."
-                            spellcheck="false"
+                            spellCheck="false"
+                            value={givenKeys[2]["anthropic-key"]}
                             onChange={(e) => {
                                 givenKeys[2]["anthropic-key"] = e.target.value;
                                 setKeys(givenKeys);

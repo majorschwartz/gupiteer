@@ -1,6 +1,15 @@
 import React from "react";
 
-const ModelDrop = ({ model, setModel }) => {
+const ModelDrop = ({ model, setModel, keys }) => {
+    const key_list = ["openai-key", "gemini-key", "anthropic-key"];
+    var available = [1, 1, 1];
+
+    for (let i = 0; i < key_list.length; i++) {
+        if (keys[i][key_list[i]]) {
+            available[i] = 0;
+        }
+    }
+    
     return (
         <div className="model-comps">
             <div className="model-name">Model:</div>
@@ -11,14 +20,30 @@ const ModelDrop = ({ model, setModel }) => {
                         setModel(e.target.value);
                     }}
                 >
-                    <option value="gpt-3.5-turbo">GPT-3.5-Turbo</option>
-                    <option value="gpt-4">GPT-4</option>
-                    <option value="gpt-4-32k">GPT-4-32k</option>
-                    <option value="gpt-4-0125-preview">
-                        GPT-4-0125-Preview
-                    </option>
-                    <option disabled value="mistral-7b">Mistral 7B</option>
-                    <option value="google-gemini">Google Gemini</option>
+                    <optgroup label="OpenAI">
+                        <option disabled={available[0]} value="gpt-3.5-turbo">GPT-3.5-Turbo</option>
+                        <option disabled={available[0]} value="gpt-4">GPT-4</option>
+                        <option disabled={available[0]} value="gpt-4-32k">GPT-4-32k</option>
+                        <option disabled={available[0]} value="gpt-4-0125-preview">
+                            GPT-4-0125-Preview
+                        </option>
+                    </optgroup>
+
+                    <optgroup label="Anthropic">
+                        <option disabled={available[2]} value="claude-3-opus-20240229">
+                            Claude 3 Opus
+                        </option>
+                        <option disabled={available[2]} value="claude-3-sonnet-20240229">
+                            Claude 3 Sonnet
+                        </option>
+                        <option disabled={available[2]} value="claude-3-haiku-20240307">
+                            Claude 3 Haiku
+                        </option>
+                    </optgroup>
+
+                    <optgroup label="Google">
+                        <option disabled={available[1]} value="google-gemini">Google Gemini</option>
+                    </optgroup>
                 </select>
             </div>
         </div>

@@ -5,6 +5,7 @@
 
 # virtual environment
 venv
+.venv
 
 # python cache
 __pycache__
@@ -23,6 +24,7 @@ proj.txt
 # testing
 /coverage
 test*.*
+h-*.*
 
 # production
 /build
