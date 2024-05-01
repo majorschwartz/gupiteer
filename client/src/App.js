@@ -29,7 +29,7 @@ function App() {
                     <div className="column second-column">
                         <div className="bar-options">
                             <ModelDrop model={model} setModel={setModel} />
-                            <EvalToggle evaluate={evaluate} setEval={setEval} />
+                            {/* <EvalToggle evaluate={evaluate} setEval={setEval} /> */}
                         </div>
                     </div>
                 </div>

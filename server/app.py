@@ -1,9 +1,8 @@
 import time
-# from dotenv import load_dotenv
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from openai import OpenAI
-# import google.generativeai as genai
+import google.generativeai as genai
 import hashlib
 import pathlib
 import textwrap
@@ -13,23 +12,12 @@ import os
 app = Flask(__name__)
 CORS(app)
 
-# load_dotenv()
-
-# genai.configure(api_key=os.getenv(""))
-
 def prompt_gpt(model="gpt-3.5-turbo", evaluation=False, prompt="", respList=[], keys=None):
-    openai_key = keys[0]['openai-key']
-    print(openai_key)
-
-    available_special_keys = ["ecb7467312cc20314a7cc354a054645f", "f29aad24e8f9e65587ff758ff92bb74d"]
-
-    if (str(hashlib.md5(openai_key.encode()).hexdigest()) in available_special_keys):
-        openai_key = os.getenv("OPENAI_KEY_SPECIAL")
-
-    openaiClient = OpenAI(api_key=openai_key)
-
+    print(f"Prompting {model}")
     try:
-        given_model = "gpt-3.5-turbo"
+
+        # Getting context
+        
         super_context = "You are a chatbot. I will provide previous chat content below from our conversation. **IMPORTANT: DO NOT ADD PREFIXES TO YOUR RESPONSE (I.E. 'GPT Response', or 'Response'). ONLY RESPOND WITH YOUR RESPONSE AND NO PREFIX.**\n\n"
         previous_context = "Previous chat content:\n"
         if len(respList) > 0:
@@ -41,7 +29,19 @@ def prompt_gpt(model="gpt-3.5-turbo", evaluation=False, prompt="", respList=[], 
 
         print(previous_context)
 
+        # Getting response
+
+        # OpenAI
         if model in ['gpt-3.5-turbo', 'gpt-4', 'gpt-4-32k', 'gpt-4-0125-preview']:
+            openai_key = keys[0]['openai-key']
+
+            available_special_keys = ["ecb7467312cc20314a7cc354a054645f", "f29aad24e8f9e65587ff758ff92bb74d"]
+
+            if (str(hashlib.md5(openai_key.encode()).hexdigest()) in available_special_keys):
+                openai_key = os.getenv("OPENAI_KEY_SPECIAL")
+
+            openaiClient = OpenAI(api_key=openai_key)
+            
             completion = openaiClient.chat.completions.create(
                 messages=[
                     {
@@ -53,28 +53,21 @@ def prompt_gpt(model="gpt-3.5-turbo", evaluation=False, prompt="", respList=[], 
             )
             response = completion.choices[0].message.content
         
-        # Make implementation for Mistral-7b and Google Gemini
-        # model = genai.GenerativeModel('gemini-pro')
-        # response = model.generate_content("What is the meaning of life?")
-        elif model in ['mistral-7b', 'google-gemini']:
-            # This is for addqitonal models that are not OpenAI
-            # Future completion project!
-            completion = openaiClient.chat.completions.create(
-                messages=[
-                    {
-                        "role": "user",
-                        "content": super_context + previous_context + "\nNew Prompt: " + prompt,
-                    }
-                ],
-                model=given_model
-            )
-            response = completion.choices[0].message.content
-        # This is just an OpenAI grab right now!
+        # Google
+        elif model in ['google-gemini']:
+            print(f"Gemini prompting - {keys[1]['gemini-key']}")
+            genai.configure(api_key=keys[1]['gemini-key'])
+
+            gemini = genai.GenerativeModel('gemini-pro')
+            completion = gemini.generate_content(prompt)
+
+            response = completion.text
+        
+        # Mistral
+        elif model in ['mistral-7b']:
+            response = "This model is not yet supported."
 
         generated_response = {'user': False, 'response': response, 'eval_score': 0, 'model': model}
-
-        # Handle evaluation
-        # Write under
         
     except Exception as e:
         error_response = {'user': False, 'response': 'An error has occurred. Make sure you\'ve entered a valid API key, and try again.', 'eval_score': 0, 'model': model}
