@@ -18,7 +18,7 @@ const ModelDrop = ({ model, setModel }) => {
                         GPT-4-0125-Preview
                     </option>
                     <option disabled value="mistral-7b">Mistral 7B</option>
-                    <option disabled value="google-gemini">Google Gemini</option>
+                    <option value="google-gemini">Google Gemini</option>
                 </select>
             </div>
         </div>

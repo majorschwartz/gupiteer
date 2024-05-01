@@ -12,8 +12,10 @@ import os
 app = Flask(__name__)
 CORS(app)
 
+def print_request(request):
+    print(f"\n| Model: {request['model']}\n| Evaluate: {request['evaluate']}\n| Prompt: {request['prompt']}\n| Chat Count: {len(request['respList'])}\n| Keys: {request['keys']}\n")
+
 def prompt_gpt(model="gpt-3.5-turbo", evaluation=False, prompt="", respList=[], keys=None):
-    print(f"Prompting {model}")
     try:
 
         # Getting context
@@ -55,7 +57,6 @@ def prompt_gpt(model="gpt-3.5-turbo", evaluation=False, prompt="", respList=[], 
         
         # Google
         elif model in ['google-gemini']:
-            print(f"Gemini prompting - {keys[1]['gemini-key']}")
             genai.configure(api_key=keys[1]['gemini-key'])
 
             gemini = genai.GenerativeModel('gemini-pro')
@@ -75,7 +76,7 @@ def prompt_gpt(model="gpt-3.5-turbo", evaluation=False, prompt="", respList=[], 
         final_list.append(error_response)
         return final_list
 
-    print(generated_response)
+    print(f"Generated response:\n{generated_response['response']}\n")
     
     final_list = respList.copy()
     final_list.append(generated_response)
@@ -91,7 +92,8 @@ def submit_data():
         respList = data.get('respList')
         keys = data.get('keys')
 
-        print(respList)
+        print_request({ "model": model, "evaluate": evaluate, "prompt": prompt, "respList": respList, "keys": keys })
+
         gen_response = prompt_gpt(model, evaluate, prompt, respList, keys)
         return jsonify(gen_response)
     except Exception as e:

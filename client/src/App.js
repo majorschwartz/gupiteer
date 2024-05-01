@@ -13,7 +13,6 @@ function App() {
             {"gemini-key": "", "valid": false},
             {"anthropic-key": "", "valid": false},
     ]);
-    // const [context, setContext] = useState([]);
     const [model, setModel] = useState("gpt-3.5-turbo");
     const [evaluate, setEval] = useState(false);
     const [respList, setRespList] = useState([]);

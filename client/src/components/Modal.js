@@ -2,18 +2,6 @@ import React from "react";
 
 const Modal = ({ shown, setShown, keys, setKeys }) => {
     const givenKeys = [...keys];
-    // Necessary?
-
-    // useEffect(() => {
-    //     console.log("Keys: ", givenKeys);
-
-    //     for (let i = 0; i < givenKeys.length; i++) {
-    //         if (givenKeys[i]["valid"] == false) {
-    //             console.log("Invalid key: ", givenKeys[i]);
-    //             // Update keys
-    //         }
-    //     }
-    // }, [givenKeys]);
 
     return (
         <div className={"modal" + (shown ? " shown" : " hidden")}>
@@ -51,11 +39,11 @@ const Modal = ({ shown, setShown, keys, setKeys }) => {
                     </div>
                     <div>
                         <span className="key-text">
-                            <span className="coming-soon">Coming Soon</span>
+                            {/* <span className="coming-soon">Coming Soon</span> */}
                             Gemini API Key:{" "}
                         </span>
                         <input
-                            disabled
+                            // disabled
                             type="text"
                             id="gemini-key"
                             placeholder="..."
