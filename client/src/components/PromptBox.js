@@ -43,9 +43,9 @@ const PromptBox = ({
                     responses
             );
             // Uncomment below before deploying
-            const response = await fetch("https://gupiteer-flask-8d87ce530814.herokuapp.com/api/submit", {
+            // const response = await fetch("https://gupiteer-flask-8d87ce530814.herokuapp.com/api/submit", {
             // Uncomment below for local testing
-            // const response = await fetch("http://127.0.0.1:5000/api/submit", {
+            const response = await fetch("http://127.0.0.1:5000/api/submit", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

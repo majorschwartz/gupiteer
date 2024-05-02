@@ -24,9 +24,9 @@ function App() {
         const keyTypes = ["openai-key", "gemini-key", "anthropic-key"];
 
         for (let i = 0; i < keys.length; i++) {
-            
-            setCookie(keyTypes[i], keys[i][keyTypes[i]], { path: "/" });
-            
+            if (keys[i][keyTypes[i]] !== undefined) {
+                setCookie(keyTypes[i], keys[i][keyTypes[i]], { path: "/" });
+            }
         }
     }, [keys]);
 
