@@ -1,6 +1,21 @@
+# Author:       Major Schwartz
+# Application:  Gupiteer
+# Description:  Backend server for Gupiteer, a chatbot application that uses large language models (LLMs) to generate responses to user input.
+#               This server is built using Flask, and uses the OpenAI, Google, and Anthropic APIs to generate responses.
+
+
+# Libraries
+
+
 import time
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from werkzeug.security import generate_password_hash, check_password_hash
+import jwt
+from flask_pymongo import PyMongo
+from pymongo import DuplicateKeyError, OperationFailure
+from flask_bcrypt import Bcrypt
+import datetime
 from openai import OpenAI
 import google.generativeai as genai
 from dotenv import load_dotenv
@@ -11,10 +26,23 @@ import textwrap
 import json
 import os
 
-app = Flask(__name__)
-CORS(app)
+
+# Backend setup
+
 
 load_dotenv()
+
+app = Flask(__name__)
+app.config['SECRET_KEY'] = os.getenv('APP_SECRET_KEY')
+CORS(app)
+
+mongo = PyMongo(app, uri=os.getenv('MONGO_URI'))
+bcrypt = Bcrypt(app)
+db = mongo.db.users
+
+
+# Helper functions
+
 
 def print_request(request):
     print(f"\n| Model: {request['model']}\n| Evaluate: {request['evaluate']}\n| Prompt: {request['prompt']}\n| Chat Count: {len(request['respList'])}\n| Keys: {request['keys']}\n")
@@ -28,6 +56,10 @@ def check_special(keys):
             keys[1]['gemini-key'] = os.getenv('GEMINI_KEY_SPECIAL')
             keys[2]['anthropic-key'] = os.getenv('ANTHROPIC_KEY_SPECIAL')
     return keys
+
+
+# LLM prompting
+
 
 def prompt_gpt(model="gpt-3.5-turbo", evaluation=False, prompt="", respList=[], keys=None):
     try:
@@ -106,6 +138,11 @@ def prompt_gpt(model="gpt-3.5-turbo", evaluation=False, prompt="", respList=[], 
     final_list.append(generated_response)
     return final_list
 
+
+# API routes
+
+
+# LLM request route
 @app.route('/api/submit', methods=['POST'])
 def submit_data():
     try:
@@ -124,5 +161,38 @@ def submit_data():
         print(e)
         return e
 
+# Register route
+@app.route('/register', methods=['POST'])
+def register():
+    data = request.get_json()
+    email = data['email']
+    password = data['password']
+    user = db.find_one({'email': email})
+    if user:
+        return jsonify({'error': 'Email already exists'}), 409
+    hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+    db.insert_one({'email': email, 'password': hashed_password})
+    return jsonify({'message': 'User created successfully'}), 201
+
+# Login route
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.get_json()
+    email = data['email']
+    password = data['password']
+    user = db.find_one({'email': email})
+    if user and bcrypt.check_password_hash(user['password'], password):
+        token = jwt.encode({
+            'email': email,
+            'exp': datetime.datetime.now(datetime.UTC) + datetime.timedelta(hours=24)
+        }, app.config['SECRET_KEY'], algorithm="HS256")
+        return jsonify({'token': token})
+    else:
+        return jsonify({'error': 'Invalid credentials'}), 401
+
+
+# Running the app
+
+
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
