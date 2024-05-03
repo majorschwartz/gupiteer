@@ -3,6 +3,10 @@
 # api keys
 .env
 
+# virtual env python
+.venv
+venv
+
 # media
 /media
 

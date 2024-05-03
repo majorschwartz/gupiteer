@@ -12,9 +12,8 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from werkzeug.security import generate_password_hash, check_password_hash
 import jwt
-from flask_pymongo import PyMongo
-from pymongo import DuplicateKeyError, OperationFailure
-from flask_bcrypt import Bcrypt
+from pymongo import MongoClient
+import bcrypt
 import datetime
 from openai import OpenAI
 import google.generativeai as genai
@@ -36,9 +35,9 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.getenv('APP_SECRET_KEY')
 CORS(app)
 
-mongo = PyMongo(app, uri=os.getenv('MONGO_URI'))
-bcrypt = Bcrypt(app)
-db = mongo.db.users
+client = MongoClient(os.getenv('MONGO_URI'))
+database = client[os.getenv('MONGO_USER_DB')]
+collection = database[os.getenv('MONGO_USER_COLLECTION')]
 
 
 # Helper functions
@@ -50,7 +49,7 @@ def print_request(request):
 def check_special(keys):
     available_special_keys = ['fd6726729c81f4cbbf96fd37b93f28fc', 'f5d2cdd3f52f7c854c084c72742b2387', 'a1c7b80dcb74c12dceb34670a4e018c7']
     key_list = ['openai-key', 'gemini-key', 'anthropic-key']
-    for i in range(len(keys)):
+    for i in range(len(key_list)):
         if str(hashlib.md5(keys[i][key_list[i]].encode()).hexdigest()) in available_special_keys:
             keys[0]['openai-key'] = os.getenv('OPENAI_KEY_SPECIAL')
             keys[1]['gemini-key'] = os.getenv('GEMINI_KEY_SPECIAL')
@@ -164,35 +163,52 @@ def submit_data():
 # Register route
 @app.route('/register', methods=['POST'])
 def register():
+    print(f"Registering user: {request.get_json()}\n")
+
     data = request.get_json()
-    email = data['email']
-    password = data['password']
-    user = db.find_one({'email': email})
-    if user:
-        return jsonify({'error': 'Email already exists'}), 409
-    hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-    db.insert_one({'email': email, 'password': hashed_password})
-    return jsonify({'message': 'User created successfully'}), 201
+    email = data.get('email')
+    password = data.get('password')
+    
+    if not email or not password:
+        return jsonify({"error": "Invalid email or password."}), 400
+    
+    existing_user = collection.find_one({'email': email})
+
+    if existing_user:
+        return jsonify({"error": "Email already exists."}), 409
+    
+    hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+    collection.insert_one({'email': email, 'password': hashed_password})
+    
+    return jsonify({"message": "User created successfully."}), 201
 
 # Login route
 @app.route('/login', methods=['POST'])
 def login():
+    print(f"Logging in user: {request.get_json()}\n")
+
     data = request.get_json()
-    email = data['email']
-    password = data['password']
-    user = db.find_one({'email': email})
-    if user and bcrypt.check_password_hash(user['password'], password):
+    email = data.get('email')
+    password = data.get('password')
+
+    if not email or not password:
+        return jsonify({'error': 'Invalid credentials.'}), 401
+    
+    user = collection.find_one({'email': email})
+
+    if user and bcrypt.checkpw(password.encode('utf-8'), user['password']):
         token = jwt.encode({
             'email': email,
+            'iat': datetime.datetime.now(datetime.UTC),
             'exp': datetime.datetime.now(datetime.UTC) + datetime.timedelta(hours=24)
         }, app.config['SECRET_KEY'], algorithm="HS256")
-        return jsonify({'token': token})
-    else:
-        return jsonify({'error': 'Invalid credentials'}), 401
+
+        return jsonify({'token': token}), 200
+    return jsonify({'error': 'Invalid credentials.'}), 401
 
 
 # Running the app
 
 
 if __name__ == '__main__':
-    app.run(debug=False)
+    app.run(debug=True)

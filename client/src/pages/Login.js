@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const Login = () => {
@@ -10,15 +9,28 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post("http://localhost:5000/login", {
-                email,
-                password,
+            const response = await fetch("http://127.0.0.1:5000/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*",
+                },
+                body: JSON.stringify({
+                    email: email,
+                    password: password,
+                }),
             });
-            localStorage.setItem("token", response.data.token);
-            console.log("Login successful");
+            if (!response.ok) {
+                throw new Error('Failed to login.');
+            };
+
+            const data = await response.json();
+            
+            localStorage.setItem("token", data.token);
+            console.log("Login successful.");
             navigate("/");
         } catch (error) {
-            console.error("Failed to login", error.response.data);
+            console.error("Failed to login.", error);
         }
     };
 
