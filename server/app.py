@@ -61,6 +61,9 @@ def check_special(keys):
 
 
 def prompt_gpt(model="gpt-3.5-turbo", evaluation=False, prompt="", respList=[], keys=None):
+    
+    # To add: Sending data to database for storing chat history and conversations
+    
     try:
         keys = check_special(keys)
         # Getting context
