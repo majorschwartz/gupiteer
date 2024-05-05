@@ -16,9 +16,9 @@ function Main() {
         "anthropic-key",
     ]);
     const [keys, setKeys] = useState([
-        { "openai-key": cookies["openai-key"], valid: false },
-        { "gemini-key": cookies["gemini-key"], valid: false },
-        { "anthropic-key": cookies["anthropic-key"], valid: false },
+        { "openai-key": (cookies["openai-key"] === undefined) ? "" : cookies["openai-key"], valid: false },
+        { "gemini-key": (cookies["gemini-key"] === undefined) ? "" : cookies["gemini-key"], valid: false },
+        { "anthropic-key": (cookies["anthropic-key"] === undefined) ? "" : cookies["anthropic-key"], valid: false },
     ]);
     const [model, setModel] = useState("gpt-3.5-turbo");
     // const [evaluate, setEval] = useState(false);

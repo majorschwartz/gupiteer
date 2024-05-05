@@ -4,6 +4,7 @@ import { AuthProvider } from "./providers/AuthContext";
 import Main from "./pages/Main";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
+import GetEmail from "./pages/GetEmail";
 
 const App = () => {
     return (
@@ -13,6 +14,7 @@ const App = () => {
                     <Route path="/" element={<Main />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
+                    <Route path="/email" element={<GetEmail />} />
                 </Routes>
             </Router>
         </AuthProvider>

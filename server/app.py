@@ -24,6 +24,7 @@ import pathlib
 import textwrap
 import json
 import os
+from decorators.decorators import token_required
 
 
 # Backend setup
@@ -208,6 +209,13 @@ def login():
 
         return jsonify({'token': token}), 200
     return jsonify({'error': 'Invalid credentials.'}), 401
+
+
+# Get email route
+@app.route('/email', methods=['GET'])
+@token_required
+def get_email(current_user):
+    return jsonify({'email': current_user})
 
 
 # Running the app
