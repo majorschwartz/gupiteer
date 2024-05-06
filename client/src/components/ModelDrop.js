@@ -1,14 +1,11 @@
 import React from "react";
+import { useKeys } from "../providers/KeyContext";
 
-const ModelDrop = ({ model, setModel, keys }) => {
+const ModelDrop = ({ model, setModel }) => {
+    const { keys } = useKeys();
+
     const key_list = ["openai-key", "gemini-key", "anthropic-key"];
-    var available = [1, 1, 1];
-
-    for (let i = 0; i < key_list.length; i++) {
-        if (keys[i][key_list[i]]) {
-            available[i] = 0;
-        }
-    }
+    const available = key_list.map((key) => keys[key] ? 0 : 1);
     
     return (
         <div className="model-comps">

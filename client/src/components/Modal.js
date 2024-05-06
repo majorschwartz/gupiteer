@@ -1,7 +1,12 @@
 import React from "react";
+import { useKeys } from "../providers/KeyContext";
 
-const Modal = ({ shown, setShown, keys, setKeys }) => {
-    const givenKeys = [...keys];
+const Modal = ({ shown, setShown }) => {
+    const { keys, setKeys } = useKeys();
+    
+    const handleChange = (keyName, newValue) => {
+        setKeys({ ...keys, [keyName]: newValue });
+    }
 
     return (
         <div className={"modal" + (shown ? " shown" : " hidden")}>
@@ -31,47 +36,34 @@ const Modal = ({ shown, setShown, keys, setKeys }) => {
                             id="openai-key"
                             placeholder="sk-..."
                             spellCheck="false"
-                            value={givenKeys[0]["openai-key"]}
-                            onChange={(e) => {
-                                givenKeys[0]["openai-key"] = e.target.value;
-                                setKeys(givenKeys);
-                            }}
+                            value={keys["openai-key"] || ''}
+                            onChange={(e) => handleChange("openai-key", e.target.value)}
                         />
                     </div>
                     <div>
                         <span className="key-text">
-                            {/* <span className="coming-soon">Coming Soon</span> */}
                             Gemini API Key:{" "}
                         </span>
                         <input
-                            // disabled
                             type="text"
                             id="gemini-key"
                             placeholder="..."
                             spellCheck="false"
-                            value={givenKeys[1]["gemini-key"]}
-                            onChange={(e) => {
-                                givenKeys[1]["gemini-key"] = e.target.value;
-                                setKeys(givenKeys);
-                            }}
+                            value={keys["gemini-key"] || ''}
+                            onChange={(e) => handleChange("gemini-key", e.target.value)}
                         />
                     </div>
                     <div>
                         <span className="key-text">
-                            {/* <span className="coming-soon">Coming Soon</span> */}
                             Anthropic API Key:{" "}
                         </span>
                         <input
-                            // disabled
                             type="text"
                             id="anthropic-key"
                             placeholder="sk-ant-api03-..."
                             spellCheck="false"
-                            value={givenKeys[2]["anthropic-key"]}
-                            onChange={(e) => {
-                                givenKeys[2]["anthropic-key"] = e.target.value;
-                                setKeys(givenKeys);
-                            }}
+                            value={keys["anthropic-key"] || ''}
+                            onChange={(e) => handleChange("anthropic-key", e.target.value)}
                         />
                     </div>
                 </div>

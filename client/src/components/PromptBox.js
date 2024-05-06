@@ -1,4 +1,5 @@
 import React from "react";
+import { useKeys } from "../providers/KeyContext";
 
 const PromptBox = ({
     model,
@@ -6,9 +7,9 @@ const PromptBox = ({
     setPrompt,
     respList,
     setRespList,
-    keys,
 }) => {
     const apiUrl = process.env.REACT_APP_API_ENDPOINT;
+    const { keys } = useKeys();
 
     async function call_api(event) {
         event.preventDefault();

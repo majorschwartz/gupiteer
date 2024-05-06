@@ -5,80 +5,61 @@ import PromptBox from "../components/PromptBox";
 import Title from "../components/Title";
 import ResponseBox from "../components/ResponseBox";
 import KeySection from "../components/KeySection";
-import { CookiesProvider, useCookies } from "react-cookie";
+import { CookiesProvider } from "react-cookie";
+import { AuthProvider } from "../providers/AuthContext";
+import { KeyProvider } from "../providers/KeyContext";
+
 import Auth from "../components/Auth";
 
 function Main() {
-    const [cookies, setCookie] = useCookies([
-        "openai-key",
-        "gemini-key",
-        "anthropic-key",
-    ]);
-    const [keys, setKeys] = useState([
-        { "openai-key": (cookies["openai-key"] === undefined) ? "" : cookies["openai-key"], valid: false },
-        { "gemini-key": (cookies["gemini-key"] === undefined) ? "" : cookies["gemini-key"], valid: false },
-        { "anthropic-key": (cookies["anthropic-key"] === undefined) ? "" : cookies["anthropic-key"], valid: false },
-    ]);
     const [model, setModel] = useState("gpt-3.5-turbo");
     const [respList, setRespList] = useState([]);
     const [prompt, setPrompt] = useState("");
 
-    useEffect(() => {
-        const keyTypes = ["openai-key", "gemini-key", "anthropic-key"];
-        const cookieOptions = {
-            path: "/",
-            expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
-        }
-
-        for (let i = 0; i < keys.length; i++) {
-            if (keys[i][keyTypes[i]] !== undefined) {
-                setCookie(keyTypes[i], keys[i][keyTypes[i]], cookieOptions);
-            }
-        }
-    }, [keys]);
-
     return (
         <CookiesProvider>
-            <div className="App">
-                <div className="flex-container">
-                    <div className="row top-row">
-                        <div className="column first-column">
-                            <Title />
-                        </div>
-                        <div className="column second-column">
-                            <div className="bar-options">
-                                <ModelDrop
-                                    model={model}
-                                    setModel={setModel}
-                                    keys={keys}
-                                />
-                                <Auth />
+            <AuthProvider>
+                <KeyProvider>
+                    <div className="App">
+                        <div className="flex-container">
+                            <div className="row top-row">
+                                <div className="column first-column">
+                                    <Title />
+                                </div>
+                                <div className="column second-column">
+                                    <div className="bar-options">
+                                        <ModelDrop
+                                            model={model}
+                                            setModel={setModel}
+                                        />
+                                        <Auth />
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="row middle-row">
+                                <div className="column first-column"></div>
+                                <div className="column second-column">
+                                    <ResponseBox respList={respList} />
+                                </div>
+                            </div>
+                            <div className="row bottom-row">
+                                <div className="column first-column">
+                                    <KeySection />
+                                </div>
+                                <div className="column second-column">
+                                    <PromptBox
+                                        model={model}
+                                        prompt={prompt}
+                                        setPrompt={setPrompt}
+                                        respList={respList}
+                                        setRespList={setRespList}
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div className="row middle-row">
-                        <div className="column first-column"></div>
-                        <div className="column second-column">
-                            <ResponseBox respList={respList} />
-                        </div>
-                    </div>
-                    <div className="row bottom-row">
-                        <div className="column first-column">
-                            <KeySection keys={keys} setKeys={setKeys} />
-                        </div>
-                        <div className="column second-column">
-                            <PromptBox
-                                model={model}
-                                prompt={prompt}
-                                setPrompt={setPrompt}
-                                respList={respList}
-                                setRespList={setRespList}
-                                keys={keys}
-                            />
-                        </div>
-                    </div>
-                </div>
-            </div>
+                </KeyProvider>
+            </AuthProvider>
         </CookiesProvider>
     );
 }

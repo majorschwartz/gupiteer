@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Modal from "./Modal";
 
-const KeySection = ({ keys, setKeys }) => {
+const KeySection = () => {
     const [shown, setShown] = useState(false);
     function toggleModal() {
         setShown(!shown);
@@ -15,8 +15,6 @@ const KeySection = ({ keys, setKeys }) => {
             <Modal
                 shown={shown}
                 setShown={setShown}
-                keys={keys}
-                setKeys={setKeys}
             />
         </>
     );
