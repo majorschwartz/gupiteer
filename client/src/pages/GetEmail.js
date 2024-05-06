@@ -5,19 +5,18 @@ const GetEmail = () => {
     const [email, setEmail] = useState("");
     const { isLoggedIn } = useAuth();
 
+    const apiUrl = process.env.REACT_APP_API_ENDPOINT;
+
     useEffect(() => {
         const fetchEmail = async () => {
             try {
-                const response = await fetch(
-                    process.env.REACT_APP_API_ENDPOINT + "/email",
-                    {
-                        headers: {
-                            Authorization: `Bearer ${localStorage.getItem(
-                                "token"
-                            )}`,
-                        },
-                    }
-                );
+                const response = await fetch(apiUrl + "/email", {
+                    headers: {
+                        Authorization: `Bearer ${localStorage.getItem(
+                            "token"
+                        )}`,
+                    },
+                });
                 if (!response.ok) {
                     throw new Error("Failed to fetch email.");
                 }
@@ -32,22 +31,22 @@ const GetEmail = () => {
         if (isLoggedIn) {
             fetchEmail();
         }
-    }, [isLoggedIn]);
-    
+    });
+
     return (
         <div>
             {isLoggedIn ? (
-                <div>
-                    Your email is {email}
-                </div>
+                <div>Your email is {email}</div>
             ) : (
                 <div>
                     <p>You must be logged in to view this page.</p>
-                    <a href="/login"><button>Login</button></a>
+                    <a href="/login">
+                        <button>Login</button>
+                    </a>
                 </div>
             )}
         </div>
     );
-}
+};
 
 export default GetEmail;

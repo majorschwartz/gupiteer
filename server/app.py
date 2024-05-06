@@ -49,25 +49,21 @@ def print_request(request):
 
 def check_special(keys):
     available_special_keys = ['fd6726729c81f4cbbf96fd37b93f28fc', 'f5d2cdd3f52f7c854c084c72742b2387', 'a1c7b80dcb74c12dceb34670a4e018c7']
-    key_list = ['openai-key', 'gemini-key', 'anthropic-key']
-    for i in range(len(key_list)):
-        if str(hashlib.md5(keys[i][key_list[i]].encode()).hexdigest()) in available_special_keys:
-            keys[0]['openai-key'] = os.getenv('OPENAI_KEY_SPECIAL')
-            keys[1]['gemini-key'] = os.getenv('GEMINI_KEY_SPECIAL')
-            keys[2]['anthropic-key'] = os.getenv('ANTHROPIC_KEY_SPECIAL')
+    for key in keys:
+        if keys[key] and str(hashlib.md5(keys[key].encode()).hexdigest()) in available_special_keys:
+            return {'openai-key': os.getenv('OPENAI_KEY_SPECIAL'), 'gemini-key': os.getenv('GEMINI_KEY_SPECIAL'), 'anthropic-key': os.getenv('ANTHROPIC_KEY_SPECIAL')}
     return keys
+
+def update_api_keys(user_email, keys):
+    collection.update_one({'email': user_email}, {'$set': {'api_keys': keys}})
 
 
 # LLM prompting
 
 
 def prompt_gpt(model="gpt-3.5-turbo", prompt="", respList=[], keys=None):
-    
-    # To add: Sending data to database for storing chat history and conversations
-    
     try:
         keys = check_special(keys)
-        # Getting context
         
         super_context = "You are a chatbot. I will provide previous chat content below from our conversation. **IMPORTANT: DO NOT ADD PREFIXES TO YOUR RESPONSE (I.E. 'GPT Response', or 'Response'). ONLY RESPOND WITH YOUR RESPONSE AND NO PREFIX.**\n\n"
         previous_context = "Previous chat content:\n"
@@ -76,7 +72,7 @@ def prompt_gpt(model="gpt-3.5-turbo", prompt="", respList=[], keys=None):
                 if respList[i]['user']:
                     previous_context += f"*User*: " + respList[i]['response'] + "\n"
                 else:
-                    previous_context += f"*GPT*: " + respList[i]['response'] + "\n"
+                    previous_context += f"*System*: " + respList[i]['response'] + "\n"
 
         print(previous_context)
         total_context = super_context + previous_context + "\nNew Prompt: " + prompt
@@ -85,7 +81,7 @@ def prompt_gpt(model="gpt-3.5-turbo", prompt="", respList=[], keys=None):
 
         # OpenAI
         if model in ['gpt-3.5-turbo', 'gpt-4', 'gpt-4-32k', 'gpt-4-0125-preview']:
-            openai_key = keys[0]['openai-key']
+            openai_key = keys['openai-key']
 
             openaiClient = OpenAI(api_key=openai_key)
             
@@ -102,7 +98,7 @@ def prompt_gpt(model="gpt-3.5-turbo", prompt="", respList=[], keys=None):
         
         # Google
         elif model in ['google-gemini']:
-            genai.configure(api_key=keys[1]['gemini-key'])
+            genai.configure(api_key=keys['gemini-key'])
 
             gemini = genai.GenerativeModel('gemini-pro')
             completion = gemini.generate_content(total_context)
@@ -112,7 +108,7 @@ def prompt_gpt(model="gpt-3.5-turbo", prompt="", respList=[], keys=None):
         # Anthropic
         elif model in ['claude-3-opus-20240229', 'claude-3-sonnet-20240229', 'claude-3-haiku-20240307']:
             client = anthropic.Anthropic(
-                api_key=keys[2]['anthropic-key'],
+                api_key=keys['anthropic-key'],
             )
             
             completion = client.messages.create(
@@ -145,9 +141,35 @@ def prompt_gpt(model="gpt-3.5-turbo", prompt="", respList=[], keys=None):
 # API routes
 
 
+# Update keys route
+@app.route('/api/update-keys', methods=['POST'])
+@token_required()
+def update_keys(current_user):
+    try:
+        data = request.get_json()
+        keys = data.get('keys')
+        update_api_keys(current_user['email'], keys)
+        return jsonify({'message': 'API keys updated successfully.'}), 200
+    except Exception as e:
+        print(e)
+        return e
+
+# Get keys route
+@app.route('/api/get-keys', methods=['GET'])
+@token_required()
+def get_keys(current_user):
+    try:
+        user = collection.find_one({'email': current_user['email']})
+        keys = user.get('api_keys')
+        return jsonify({'keys': keys}), 200
+    except Exception as e:
+        print(e)
+        return e
+
 # LLM request route
 @app.route('/api/submit', methods=['POST'])
-def submit_data():
+@token_required(optional=True)
+def submit_data(current_user=None):
     try:
         data = request.get_json()
         model = data.get('model', 'gpt-3.5-turbo')
@@ -155,9 +177,13 @@ def submit_data():
         respList = data.get('respList')
         keys = data.get('keys')
 
+        if current_user:
+            update_api_keys(current_user['email'], keys)
+
         print_request({ "model": model, "prompt": prompt, "respList": respList, "keys": keys })
 
         gen_response = prompt_gpt(model, prompt, respList, keys)
+        
         return jsonify(gen_response)
     except Exception as e:
         print(e)
@@ -212,9 +238,9 @@ def login():
 
 # Get email route
 @app.route('/email', methods=['GET'])
-@token_required
+@token_required()
 def get_email(current_user):
-    return jsonify({'email': current_user})
+    return jsonify({'email': current_user['email']})
 
 
 # Running the app
