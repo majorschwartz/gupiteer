@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import "../App.css";
-// import EvalToggle from "../components/EvalToggle";
 import ModelDrop from "../components/ModelDrop";
 import PromptBox from "../components/PromptBox";
 import Title from "../components/Title";
@@ -21,19 +20,22 @@ function Main() {
         { "anthropic-key": (cookies["anthropic-key"] === undefined) ? "" : cookies["anthropic-key"], valid: false },
     ]);
     const [model, setModel] = useState("gpt-3.5-turbo");
-    // const [evaluate, setEval] = useState(false);
     const [respList, setRespList] = useState([]);
     const [prompt, setPrompt] = useState("");
 
     useEffect(() => {
         const keyTypes = ["openai-key", "gemini-key", "anthropic-key"];
+        const cookieOptions = {
+            path: "/",
+            expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
+        }
 
         for (let i = 0; i < keys.length; i++) {
             if (keys[i][keyTypes[i]] !== undefined) {
-                setCookie(keyTypes[i], keys[i][keyTypes[i]], { path: "/" });
+                setCookie(keyTypes[i], keys[i][keyTypes[i]], cookieOptions);
             }
         }
-    });
+    }, [keys]);
 
     return (
         <CookiesProvider>
@@ -50,7 +52,6 @@ function Main() {
                                     setModel={setModel}
                                     keys={keys}
                                 />
-                                {/* <EvalToggle evaluate={evaluate} setEval={setEval} /> */}
                                 <Auth />
                             </div>
                         </div>
@@ -68,7 +69,6 @@ function Main() {
                         <div className="column second-column">
                             <PromptBox
                                 model={model}
-                                // evaluate={evaluate}
                                 prompt={prompt}
                                 setPrompt={setPrompt}
                                 respList={respList}

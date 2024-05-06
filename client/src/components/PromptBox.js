@@ -2,7 +2,6 @@ import React from "react";
 
 const PromptBox = ({
     model,
-    evaluate,
     prompt,
     setPrompt,
     respList,
@@ -17,13 +16,11 @@ const PromptBox = ({
         var givenPrompt = {
             user: true,
             response: prompt,
-            eval_score: 0,
             model: model,
         };
         var pending = {
             user: false,
             response: false,
-            eval_score: 0,
             model: model,
         };
 
@@ -37,13 +34,14 @@ const PromptBox = ({
             console.log(
                 "\nModel: " +
                     model +
-                    "\n\nEvaluate: " +
-                    evaluate +
-                    "\n\nPrompt: " +
+                    "\nPrompt: " +
                     prompt +
-                    "\n\nrespList: " +
-                    responses
+                    "\n\n"
             );
+
+            if (responses.length === 1) {
+                console.log("New chat.");
+            }
             
             const response = await fetch(apiUrl + "/api/submit", {
                 method: "POST",
@@ -53,7 +51,6 @@ const PromptBox = ({
                 },
                 body: JSON.stringify({
                     model: model,
-                    evaluate: evaluate,
                     prompt: prompt,
                     respList: responses,
                     keys: keys,
@@ -61,8 +58,7 @@ const PromptBox = ({
             });
 
             const result = await response.json();
-            console.log("Result: ");
-            console.log(result);
+            console.log("Result: ", result);
 
             if (response.ok) {
                 setRespList(result);

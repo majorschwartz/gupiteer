@@ -5,7 +5,7 @@ const ResponseBox = ({ respList }) => {
     return (
         <div className="resp-box">
             {respList.length > 0 &&
-                respList.map((resp) => <Response {...resp} />)}
+                respList.map((resp, index) => <Response key={index} {...resp} />)}
         </div>
     );
 };

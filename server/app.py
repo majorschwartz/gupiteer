@@ -45,7 +45,7 @@ collection = database[os.getenv('MONGO_USER_COLLECTION')]
 
 
 def print_request(request):
-    print(f"\n| Model: {request['model']}\n| Evaluate: {request['evaluate']}\n| Prompt: {request['prompt']}\n| Chat Count: {len(request['respList'])}\n| Keys: {request['keys']}\n")
+    print(f"\n| Model: {request['model']}\n| Prompt: {request['prompt']}\n| Chat Count: {len(request['respList'])}\n| Keys: {request['keys']}\n")
 
 def check_special(keys):
     available_special_keys = ['fd6726729c81f4cbbf96fd37b93f28fc', 'f5d2cdd3f52f7c854c084c72742b2387', 'a1c7b80dcb74c12dceb34670a4e018c7']
@@ -61,7 +61,7 @@ def check_special(keys):
 # LLM prompting
 
 
-def prompt_gpt(model="gpt-3.5-turbo", evaluation=False, prompt="", respList=[], keys=None):
+def prompt_gpt(model="gpt-3.5-turbo", prompt="", respList=[], keys=None):
     
     # To add: Sending data to database for storing chat history and conversations
     
@@ -127,10 +127,10 @@ def prompt_gpt(model="gpt-3.5-turbo", evaluation=False, prompt="", respList=[], 
             )
             response = completion.content[0].text
 
-        generated_response = {'user': False, 'response': response, 'eval_score': 0, 'model': model}
+        generated_response = {'user': False, 'response': response, 'model': model}
         
     except Exception as e:
-        error_response = {'user': False, 'response': 'An error has occurred. Make sure you\'ve entered a valid API key, and try again.', 'eval_score': 0, 'model': model}
+        error_response = {'user': False, 'response': 'An error has occurred. Make sure you\'ve entered a valid API key, and try again.', 'model': model}
         final_list = respList.copy()
         final_list.append(error_response)
         return final_list
@@ -151,14 +151,13 @@ def submit_data():
     try:
         data = request.get_json()
         model = data.get('model', 'gpt-3.5-turbo')
-        evaluate = data.get('evaluate', False)
         prompt = data.get('prompt', '')
         respList = data.get('respList')
         keys = data.get('keys')
 
-        print_request({ "model": model, "evaluate": evaluate, "prompt": prompt, "respList": respList, "keys": keys })
+        print_request({ "model": model, "prompt": prompt, "respList": respList, "keys": keys })
 
-        gen_response = prompt_gpt(model, evaluate, prompt, respList, keys)
+        gen_response = prompt_gpt(model, prompt, respList, keys)
         return jsonify(gen_response)
     except Exception as e:
         print(e)
