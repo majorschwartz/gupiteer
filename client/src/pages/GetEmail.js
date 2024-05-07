@@ -31,7 +31,7 @@ const GetEmail = () => {
         if (isLoggedIn) {
             fetchEmail();
         }
-    });
+    }, [apiUrl, isLoggedIn]);
 
     return (
         <div>

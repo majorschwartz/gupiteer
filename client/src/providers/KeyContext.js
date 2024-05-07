@@ -21,7 +21,7 @@ export const KeyProvider = ({ children }) => {
     });
 
     const updateKeysInDatabase = (newKeys) => {
-        fetch(`${apiUrl}/api/update-keys`, {
+        fetch(`${apiUrl}/update-keys`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -58,7 +58,7 @@ export const KeyProvider = ({ children }) => {
 
     useEffect(() => {
         if (isLoggedIn) {
-            fetch(`${apiUrl}/api/get-keys`, {
+            fetch(`${apiUrl}/get-keys`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",

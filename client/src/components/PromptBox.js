@@ -44,7 +44,7 @@ const PromptBox = ({
                 console.log("New chat.");
             }
             
-            const response = await fetch(apiUrl + "/api/submit", {
+            const response = await fetch(apiUrl + "/submit", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

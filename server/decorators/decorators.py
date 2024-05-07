@@ -3,6 +3,11 @@ import os
 from flask import request, jsonify
 import jwt
 from jwt import ExpiredSignatureError, InvalidTokenError
+from pymongo import MongoClient
+
+client = MongoClient(os.getenv('MONGO_URI'))
+database = client[os.getenv('MONGO_DB')]
+user_collection = database["users"]
 
 def token_required(optional=False):
     def decorator(f):
@@ -19,7 +24,9 @@ def token_required(optional=False):
             
             try:
                 data = jwt.decode(token, os.getenv('APP_SECRET_KEY'), algorithms=["HS256"])
-                current_user = {'email': data['email']}
+                current_user = user_collection.find_one({'email': data['email']})
+                if not current_user:
+                    return jsonify({'message': 'User not found!'}), 401
             except ExpiredSignatureError:
                 return jsonify({'message': 'Token has expired!'}), 401
             except InvalidTokenError:
