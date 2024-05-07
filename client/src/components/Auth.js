@@ -9,7 +9,6 @@ const Auth = () => {
     const logout = () => {
         localStorage.removeItem("token");
         setIsLoggedIn(false);
-        navigate("/");
     };
 
     return (
@@ -20,17 +19,20 @@ const Auth = () => {
                 </button>
             ) : (
                 <>
-                    <a href="/login">
-                        <button className="log-in auth-button">Log In</button>
-                    </a>
-                    <a href="/register">
-                        <button
-                            href="/register"
-                            className="register auth-button"
-                        >
-                            Register
-                        </button>
-                    </a>
+                    <button
+                        onClick={() => navigate("/login")}
+                        className="log-in auth-button"
+                    >
+                        Log In
+                    </button>
+
+                    <button
+                        onClick={() => navigate("/register")}
+                        href="/register"
+                        className="register auth-button"
+                    >
+                        Register
+                    </button>
                 </>
             )}
         </div>

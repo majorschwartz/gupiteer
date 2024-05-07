@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useAuth } from "../providers/AuthContext";
 import { useNavigate } from "react-router-dom";
 
@@ -9,6 +9,11 @@ const Register = () => {
     const [password, setPassword] = useState("");
 
     const apiUrl = process.env.REACT_APP_API_ENDPOINT;
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        setIsLoggedIn(!!token);
+    }, [setIsLoggedIn]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -41,9 +46,9 @@ const Register = () => {
             {isLoggedIn ? (
                 <>
                     <p>You are already logged in.</p>
-                    <button onClick={() => setIsLoggedIn(false)}>Logout</button>
+                    <button onClick={() => { localStorage.removeItem('token'); setIsLoggedIn(false); }}>Logout</button>
                     <br />
-                    <a href="/"><button>Back to Home</button></a>
+                    <button onClick={() => navigate("/")}>Back to Home</button>
                 </>
             ) : (
                 <>
@@ -72,7 +77,7 @@ const Register = () => {
                             <button type="submit">Register</button>
                         </form>
                         <br />
-                        <a href="/"><button>Back to Home</button></a>
+                        <button onClick={() => navigate("/")}>Back to Home</button>
                     </div>
                 </>
             )}

@@ -213,6 +213,8 @@ def create_chat(current_user):
 @token_required()
 def get_chats(current_user):
     chats = list(chat_collection.find({"user_id": current_user["_id"]}))
+    if not chats:
+        return jsonify({"error": "No chats found."}), 404
     for chat in chats:
         chat["_id"] = str(chat["_id"])
     return jsonify({"chats": chats})
@@ -229,6 +231,34 @@ def get_chat(current_user, chat_id):
         chat["_id"] = str(chat["_id"])
         return jsonify(chat)
     return jsonify({"error": "Chat not found."}), 404
+
+
+# Add chat message route
+@app.route('/chat/<chat_id>/message', methods=['POST'])
+@token_required()
+def add_message(current_user, chat_id):
+
+    # Boilerplate code to add a message to a chat
+    # To be implemented later
+
+    chat = chat_collection.find_one({"_id": ObjectId(chat_id)})
+    if chat:
+        if chat['user_id'] != current_user['_id']:
+            return jsonify({'error': 'Unauthorized access.'}), 401
+        data = request.get_json()
+        new_message = {
+            'role': data['role'],
+            'content': data['content'],
+            'timestamp': datetime.datetime.now(datetime.UTC)
+        }
+        result = chat_collection.update_one(
+            {'_id': ObjectId(chat_id)},
+            {'$push': {'messages': new_message}}
+        )
+        if result.matched_count:
+            return jsonify({'message': 'Message added successfully.'})
+    return jsonify({'error': 'Chat not found.'}), 404
+
 
 
 # LLM request route

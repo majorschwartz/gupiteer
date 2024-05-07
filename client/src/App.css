@@ -121,6 +121,10 @@ body,
     background-color: #c5b3a0;
 }
 
+.title div {
+    font-family: monospace;
+}
+
 .title,
 .keys {
     display: flex;

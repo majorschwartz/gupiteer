@@ -1,5 +1,6 @@
 import React from "react";
 import { useKeys } from "../providers/KeyContext";
+// import { useAuth } from "../providers/AuthContext";
 
 const PromptBox = ({
     model,
@@ -10,6 +11,7 @@ const PromptBox = ({
 }) => {
     const apiUrl = process.env.REACT_APP_API_ENDPOINT;
     const { keys } = useKeys();
+    // const { isLoggedIn } = useAuth();
 
     async function call_api(event) {
         event.preventDefault();

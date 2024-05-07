@@ -12,6 +12,7 @@ const App = () => {
             <Router>
                 <Routes>
                     <Route path="/" element={<Main />} />
+                    <Route path="/chat/:chat_id" element={<Main />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Register />} />
                     <Route path="/email" element={<GetEmail />} />
