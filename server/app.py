@@ -20,7 +20,7 @@ import anthropic
 import hashlib
 import os
 from decorators.decorators import token_required
-from bson.objectid import ObjectId
+from bson import ObjectId
 
 
 ### Backend setup
@@ -41,12 +41,13 @@ chat_collection = database["chats"]
 ### Helper functions
 
 
+# Printing request function
 def print_request(request):
     print(
         f"\n| Model: {request['model']}\n| Prompt: {request['prompt']}\n| Chat Count: {len(request['respList'])}\n| Keys: {request['keys']}\n"
     )
 
-
+# Checking for special keys
 def check_special(keys):
     available_special_keys = [
         "fd6726729c81f4cbbf96fd37b93f28fc",
@@ -66,7 +67,16 @@ def check_special(keys):
             }
     return keys
 
+# Utility function to convert ObjectId fields
+def convert_object_ids(obj):
+    if isinstance(obj, dict):
+        return {k: str(v) if isinstance(v, ObjectId) else convert_object_ids(v) for k, v in obj.items()}
+    elif isinstance(obj, list):
+        return [convert_object_ids(i) for i in obj]
+    else:
+        return obj
 
+# Updating API keys
 def update_api_keys(user_id, keys):
     user_collection.update_one({"_id": user_id}, {"$set": {"api_keys": keys}})
 
@@ -215,8 +225,7 @@ def get_chats(current_user):
     chats = list(chat_collection.find({"user_id": current_user["_id"]}))
     if not chats:
         return jsonify({"error": "No chats found."}), 404
-    for chat in chats:
-        chat["_id"] = str(chat["_id"])
+    chats = [convert_object_ids(chat) for chat in chats]
     return jsonify({"chats": chats})
 
 
@@ -228,7 +237,7 @@ def get_chat(current_user, chat_id):
     if chat:
         if chat["user_id"] != current_user["_id"]:
             return jsonify({"error": "Unauthorized access."}), 401
-        chat["_id"] = str(chat["_id"])
+        chat = convert_object_ids(chat)
         return jsonify(chat)
     return jsonify({"error": "Chat not found."}), 404
 

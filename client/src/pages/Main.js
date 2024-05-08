@@ -10,6 +10,7 @@ import { AuthProvider } from "../providers/AuthContext";
 import { KeyProvider } from "../providers/KeyContext";
 
 import Auth from "../components/Auth";
+import Chats from "../components/Chats";
 
 function Main() {
     const [model, setModel] = useState("gpt-3.5-turbo");
@@ -37,7 +38,9 @@ function Main() {
                                 </div>
                             </div>
                             <div className="row middle-row">
-                                <div className="column first-column"></div>
+                                <div className="column first-column">
+                                    <Chats />
+                                </div>
                                 <div className="column second-column">
                                     <ResponseBox respList={respList} />
                                 </div>

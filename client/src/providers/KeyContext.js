@@ -25,6 +25,7 @@ export const KeyProvider = ({ children }) => {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                "Access-Control-Allow-Origin": "*",
                 Authorization: `Bearer ${localStorage.getItem('token')}`,
             },
             body: JSON.stringify({ keys: newKeys })
@@ -62,6 +63,7 @@ export const KeyProvider = ({ children }) => {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
+                    "Access-Control-Allow-Origin": "*",
                     Authorization: `Bearer ${localStorage.getItem("token")}`,
                 },
             })
