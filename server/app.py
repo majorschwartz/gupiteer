@@ -15,6 +15,7 @@ import bcrypt
 import datetime
 from openai import OpenAI
 import google.generativeai as genai
+from google.generativeai.types import GenerationConfig
 from dotenv import load_dotenv
 import anthropic
 import hashlib
@@ -97,11 +98,21 @@ def add_to_conversation(chat_id, role, model, content):
         {'$push': {'chat': message}}
     )
 
+def generate_title(current_user, model, prompt):
+    title_context = "Generate an extremely brief title for this conversation, encapsulating the main theme of the conversation. Examples: 'Python Basics', 'Quantum Mechanics', 'Penguin Types', 'Square root of 4'\n\n"
+    title_context += "Beginning prompt: " + prompt
+    title_context += "\n\nTitle: "
+    
+    title = prompt_llm(current_user, model, title_context, [], 20, title=True)
+    
+    print("\nGenerated title: " + title + "\n\n")
+    return title
+
 
 ### Main LLM prompting
 
 
-def prompt_llm(current_user=None, model="gpt-3.5-turbo", prompt="", chat=[]):
+def prompt_llm(current_user=None, model="gpt-3.5-turbo", prompt="", chat=[], max_tokens=1024, title=False):
     if not current_user:
         return {'role': 'system', 'model': model, 'content': 'User not found.', 'created_at': datetime.datetime.now(datetime.UTC)}
     
@@ -115,7 +126,8 @@ def prompt_llm(current_user=None, model="gpt-3.5-turbo", prompt="", chat=[]):
     
     total_context = super_context + previous_context + "\n\nNew Prompt: " + prompt
 
-    print_info(model, prompt, len(chat))
+    if not title:
+        print_info(model, prompt, len(chat))
 
     try:
         # Prompting the LLM
@@ -132,6 +144,7 @@ def prompt_llm(current_user=None, model="gpt-3.5-turbo", prompt="", chat=[]):
                     }
                 ],
                 model=model,
+                max_tokens=max_tokens,
             )
             response = completion.choices[0].message.content
 
@@ -139,7 +152,7 @@ def prompt_llm(current_user=None, model="gpt-3.5-turbo", prompt="", chat=[]):
         elif model in ["google-gemini"]:
             genai.configure(api_key=keys["gemini-key"])
 
-            gemini = genai.GenerativeModel("gemini-pro")
+            gemini = genai.GenerativeModel("gemini-pro", generation_config=GenerationConfig(max_tokens=max_tokens))
             completion = gemini.generate_content(total_context)
 
             response = completion.text
@@ -156,7 +169,7 @@ def prompt_llm(current_user=None, model="gpt-3.5-turbo", prompt="", chat=[]):
 
             completion = client.messages.create(
                 model=model,
-                max_tokens=512,
+                max_tokens=max_tokens,
                 messages=[
                     {
                         "role": "user",
@@ -166,7 +179,8 @@ def prompt_llm(current_user=None, model="gpt-3.5-turbo", prompt="", chat=[]):
             )
             response = completion.content[0].text
 
-        print(f"\nGenerated response:\n{response}\n")
+        if not title:
+            print(f"\nGenerated response:\n{response}\n")
         return response
 
     except Exception as e:
@@ -226,6 +240,13 @@ def create_chat(current_user):
 
         add_to_conversation(chat_id, 'system', model, generation)
 
+        chat_title = generate_title(current_user, model, prompt)
+
+        chat_collection.update_one(
+            {'_id': ObjectId(chat_id)},
+            {'$set': {'title': chat_title}}
+        )
+
         return jsonify({"chat_id": str(chat_id)}), 201
     except Exception as e:
         return jsonify({"error": "Failed to create chat."}), 400
@@ -236,7 +257,7 @@ def create_chat(current_user):
 @token_required()
 def get_chats(current_user):
     chats = list(chat_collection.find({"user_id": current_user["_id"]},
-                 {"_id": 1, "created_at": 1}))
+                 {"_id": 1, "created_at": 1, "title": 1}))
     if not chats:
         return jsonify({"error": "No chats found."}), 404
     chats = [convert_object_ids(chat) for chat in chats]

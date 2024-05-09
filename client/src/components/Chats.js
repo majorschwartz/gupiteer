@@ -71,13 +71,17 @@ const Chats = () => {
                                     chat._id === chat_id ? " active-chat" : ""
                                 }`}
                             >
-                                <Link to={`/chat/${chat._id}`}>{chat._id}</Link>
+                                <Link to={`/chat/${chat._id}`}><div>{chat.title}</div></Link>
                             </div>
                         ))}
                     </>
+                ) : isLoggedIn ? (
+                    <div className="no-chats">
+                        <span>No chats.</span>
+                    </div>
                 ) : (
                     <div className="no-chats">
-                        <span>No chats found.</span>
+                        <span>You must be logged in to save chats.</span>
                     </div>
                 )}
             </div>

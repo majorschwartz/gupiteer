@@ -69,6 +69,12 @@ body,
     font-size: 14px;
 }
 
+.info-section .model-tag {
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
 .flex-container {
     display: flex;
     flex-direction: column;
@@ -355,6 +361,7 @@ body,
     display: flex;
     align-items: center;
     justify-content: center;
+    text-align: center;
 }
 
 .chat-top-bar {
@@ -389,13 +396,9 @@ body,
 }
 
 .chat-item {
-    /* background-color: green; */
-    /* display: border-box; */
-    padding: 10px 0px;
+    /* padding: 10px 0px; */
     position: relative;
-    overflow-x: hidden;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+    height: auto;
     border-bottom: 2px solid var(--border);
 }
 
@@ -404,7 +407,7 @@ body,
     position: absolute;
     top: 0;
     right: 0;
-    width: 20px; /* Width of the fade effect */
+    width: 20px;
     height: 100%;
     background: linear-gradient(
         to right,
@@ -416,12 +419,21 @@ body,
 }
 
 .chat-item a {
+    position: relative;
     color: var(--text);
     text-decoration: none;
-    margin: none;
-    padding: 10px;
-    position: relative;
     z-index: 1;
+    display: flex;
+    align-items: center;
+    padding: 8px 0px 8px 8px;
+    font-size: 14px;
+}
+
+.chat-item a div {
+    position: relative;
+    white-space: nowrap;
+    overflow: hidden;
+    flex-grow: 1;
 }
 
 .chat-item.active-chat {
