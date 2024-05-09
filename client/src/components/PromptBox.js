@@ -21,19 +21,25 @@ const PromptBox = ({
     useEffect(() => {
         async function getChatInfo() {
             if (chat_id) {
-                const chat_info = await fetch(apiUrl + "/chat/" + chat_id, {
-                    method: "GET",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Access-Control-Allow-Origin": "*",
-                        Authorization: `Bearer ${localStorage.getItem(
-                            "token"
-                        )}`,
-                    },
-                });
-                const data = await chat_info.json();
-                console.log("Chat Info: ", data);
-                setRespList(data.chat);
+                try {
+                    const chat_info = await fetch(apiUrl + "/chat/" + chat_id, {
+                        method: "GET",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Access-Control-Allow-Origin": "*",
+                            Authorization: `Bearer ${localStorage.getItem(
+                                "token"
+                            )}`,
+                        },
+                    });
+                    const data = await chat_info.json();
+                    console.log("Chat Info: ", data);
+                    setRespList(data.chat);
+                } catch (e) {
+                    console.log(e);
+                    console.log("Error fetching chat info.");
+                    navigate("/");
+                }
             }
         }
         getChatInfo();
@@ -51,6 +57,10 @@ const PromptBox = ({
 
     async function call_api(event) {
         event.preventDefault();
+
+        if (!prompt) {
+            return;
+        }
 
         setRespList([
             ...respList,

@@ -99,14 +99,14 @@ def add_to_conversation(chat_id, role, model, content):
     )
 
 def generate_title(current_user, model, prompt):
-    title_context = "Generate an extremely brief title for this conversation, encapsulating the main theme of the conversation. Examples: 'Python Basics', 'Quantum Mechanics', 'Penguin Types', 'Square root of 4'\n\n"
+    title_context = "Generate an extremely brief title for this conversation, encapsulating the main theme of the conversation. Examples: 'Python Basics', 'Quantum Mechanics', 'Penguin Types', 'Square root of 4'.\n\n"
     title_context += "Beginning prompt: " + prompt
     title_context += "\n\nTitle: "
     
     title = prompt_llm(current_user, model, title_context, [], 20, title=True)
-    
+
     print("\nGenerated title: " + title + "\n\n")
-    return title
+    return title.replace("'", "").replace('"', '').strip()
 
 
 ### Main LLM prompting
@@ -259,9 +259,30 @@ def get_chats(current_user):
     chats = list(chat_collection.find({"user_id": current_user["_id"]},
                  {"_id": 1, "created_at": 1, "title": 1}))
     if not chats:
-        return jsonify({"error": "No chats found."}), 404
+        return jsonify({"message": "No chats found."}), 200
     chats = [convert_object_ids(chat) for chat in chats]
     return jsonify({"chats": chats})
+
+
+# Delete chat route
+@app.route("/chat/<chat_id>", methods=["DELETE"])
+@token_required()
+def delete_chat(current_user, chat_id):
+    chat = chat_collection.find_one({"_id": ObjectId(chat_id)})
+    if chat:
+        if chat["user_id"] != current_user["_id"]:
+            return jsonify({"error": "Unauthorized access."}), 401
+        chat_collection.delete_one({"_id": ObjectId(chat_id)})
+        return jsonify({"message": "Chat deleted successfully."}), 200
+    return jsonify({"error": "Chat not found."}), 404
+
+
+# Delete chats route
+@app.route("/chats", methods=["DELETE"])
+@token_required()
+def delete_chats(current_user):
+    chat_collection.delete_many({"user_id": current_user["_id"]})
+    return jsonify({"message": "Chats deleted successfully."}), 200
 
 
 # Get specific chat route
@@ -301,33 +322,6 @@ def add_message(current_user, chat_id):
         return jsonify(new_chat['chat'])
     
     return jsonify({'error': 'Chat not found.'}), 404
-
-
-##### DEPRECATED #####
-# LLM request route
-# @app.route("/submit", methods=["POST"])
-# @token_required(optional=True)
-# def submit_data(current_user=None):
-#     try:
-#         data = request.get_json()
-#         model = data.get("model", "gpt-3.5-turbo")
-#         prompt = data.get("prompt", "")
-#         respList = data.get("respList")
-#         keys = data.get("keys")
-
-#         if current_user:
-#             update_api_keys(current_user["_id"], keys)
-
-#         print_request(
-#             {"model": model, "prompt": prompt, "respList": respList, "keys": keys}
-#         )
-
-#         gen_response = prompt_gpt(model, prompt, respList, keys)
-
-#         return jsonify(gen_response)
-#     except Exception as e:
-#         print(e)
-#         return e
 
 
 ### Login / register routes

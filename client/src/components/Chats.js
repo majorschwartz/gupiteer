@@ -40,11 +40,42 @@ const Chats = () => {
         }
     }, [isLoggedIn, chat_id, navigate, authChecked]);
 
+    const deleteChats = async () => {
+        const apiUrl = process.env.REACT_APP_API_ENDPOINT;
+        const delete_chats = await fetch(apiUrl + "/chats", {
+            method: "DELETE",
+            headers: {
+                "Content-Type": "application/json",
+                "Access-Control-Allow-Origin": "*",
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+        });
+        const data = await delete_chats.json();
+        if (data) {
+            setChats([]);
+            navigate("/");
+        }
+    }
+
     return (
         <>
             <div className="chat-top-bar">
                 <div className="section-title">Chats</div>
-                <div className="new-chat-area">
+                <div className="interacts">
+                    <button onClick={deleteChats}>
+                        <svg
+                        role="img"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        width="20px"
+                        height="20px"
+                        >
+                            <path
+                                fill="#000000"
+                                d="M15 2H9c-1.103 0-2 .897-2 2v2H3v2h2v12c0 1.103.897 2 2 2h10c1.103 0 2-.897 2-2V8h2V6h-4V4c0-1.103-.897-2-2-2M9 4h6v2H9zm8 16H7V8h10z"
+                            />
+                        </svg>
+                    </button>
                     <Link to="/">
                         <svg
                             role="img"

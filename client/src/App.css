@@ -12,6 +12,7 @@ body,
     --text: rgb(15, 15, 15);
     --background: #e3ceb9;
     --border: #76583a;
+    --accent: #c5b3a0;
 }
 
 .App {
@@ -124,7 +125,7 @@ body,
 }
 
 .title {
-    background-color: #c5b3a0;
+    background-color: var(--accent);
 }
 
 .title div {
@@ -148,7 +149,7 @@ body,
 }
 
 .keys:hover {
-    background-color: #c5b3a0;
+    background-color: var(--accent);
 }
 
 .model-comps,
@@ -201,7 +202,7 @@ body,
 .prompt-button {
     width: 80px;
     font-size: 30px;
-    background-color: #c5b3a0;
+    background-color: var(--accent);
 }
 
 .prompt-box {
@@ -349,7 +350,7 @@ body,
 }
 
 .auth-button:hover {
-    background-color: #c5b3a0;
+    background-color: var(--accent);
 }
 
 .chats-wrapper {
@@ -376,14 +377,26 @@ body,
     padding-left: 10px;
 }
 
-.chat-top-bar .new-chat-area {
+.chat-top-bar .interacts {
     padding-right: 4px;
 }
 
-.chat-top-bar .new-chat-area,
-.chat-top-bar .new-chat-area a {
+.chat-top-bar .interacts,
+.chat-top-bar .interacts a,
+.chat-top-bar .interacts button {
     display: flex;
     align-items: center;
+}
+
+.chat-top-bar .interacts button {
+    background-color: var(--background);
+    margin-right: 5px;
+    border: none;
+    outline: none;
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--background);
+    cursor: pointer;
 }
 
 .chat-list {
@@ -426,7 +439,7 @@ body,
     display: flex;
     align-items: center;
     padding: 8px 0px 8px 8px;
-    font-size: 14px;
+    font-size: 12px;
 }
 
 .chat-item a div {
@@ -437,7 +450,7 @@ body,
 }
 
 .chat-item.active-chat {
-    background-color: #c5b3a0;
+    background-color: var(--accent);
 }
 
 .chat-item.active-chat::after,
@@ -450,5 +463,5 @@ body,
 }
 
 .chat-item:hover {
-    background-color: #c5b3a0;
+    background-color: var(--accent);
 }
