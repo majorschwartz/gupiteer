@@ -373,7 +373,8 @@ body,
     padding-right: 4px;
 }
 
-.chat-top-bar .new-chat-area, .chat-top-bar .new-chat-area a {
+.chat-top-bar .new-chat-area,
+.chat-top-bar .new-chat-area a {
     display: flex;
     align-items: center;
 }
@@ -405,7 +406,11 @@ body,
     right: 0;
     width: 20px; /* Width of the fade effect */
     height: 100%;
-    background: linear-gradient(to right, rgba(227, 206, 185, 0) 0%, rgba(227, 206, 185, 1) 90%);
+    background: linear-gradient(
+        to right,
+        rgba(227, 206, 185, 0) 0%,
+        rgba(227, 206, 185, 1) 90%
+    );
     pointer-events: none;
     z-index: 2;
 }
@@ -423,8 +428,13 @@ body,
     background-color: #c5b3a0;
 }
 
-.chat-item.active-chat::after, .chat-item:hover::after {
-    background: linear-gradient(to right, rgba(197, 179, 160, 0) 10%, rgba(197, 179, 160, 1) 90%);
+.chat-item.active-chat::after,
+.chat-item:hover::after {
+    background: linear-gradient(
+        to right,
+        rgba(197, 179, 160, 0) 10%,
+        rgba(197, 179, 160, 1) 90%
+    );
 }
 
 .chat-item:hover {

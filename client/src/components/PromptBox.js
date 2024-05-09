@@ -26,8 +26,10 @@ const PromptBox = ({
                     headers: {
                         "Content-Type": "application/json",
                         "Access-Control-Allow-Origin": "*",
-                        Authorization: `Bearer ${localStorage.getItem("token")}`,
-                    }
+                        Authorization: `Bearer ${localStorage.getItem(
+                            "token"
+                        )}`,
+                    },
                 });
                 const data = await chat_info.json();
                 console.log("Chat Info: ", data);
@@ -36,7 +38,7 @@ const PromptBox = ({
         }
         getChatInfo();
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [apiUrl, chat_id]);
 
     useEffect(() => {
@@ -44,21 +46,25 @@ const PromptBox = ({
             console.log("Clearing chat.");
             setRespList([]);
         }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [chat_id])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [chat_id]);
 
     async function call_api(event) {
         event.preventDefault();
 
-        setRespList([...respList, {
-            'role': 'user',
-            'content': prompt,
-            'model': model,
-        }, {
-            'role': 'system',
-            'content': false,
-            'model': model,
-        }]);
+        setRespList([
+            ...respList,
+            {
+                role: "user",
+                content: prompt,
+                model: model,
+            },
+            {
+                role: "system",
+                content: false,
+                model: model,
+            },
+        ]);
 
         const user_prompt = structuredClone(prompt);
         console.log("Emptying prompt.");
@@ -71,7 +77,9 @@ const PromptBox = ({
                     headers: {
                         "Content-Type": "application/json",
                         "Access-Control-Allow-Origin": "*",
-                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                        Authorization: `Bearer ${localStorage.getItem(
+                            "token"
+                        )}`,
                     },
                     body: JSON.stringify({
                         model: model,
@@ -81,27 +89,31 @@ const PromptBox = ({
                 const data = await new_chat.json();
                 console.log("New Chat Response: ", data);
                 navigate("/chat/" + data.chat_id);
-            }
-            catch (e) {
+            } catch (e) {
                 console.log(e);
                 console.log("\n\nError creating new chat.\n\n");
             }
-        };
+        }
 
         if (isLoggedIn && chat_id) {
             try {
-                const new_message = await fetch(apiUrl + "/chat/" + chat_id + "/message", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Access-Control-Allow-Origin": "*",
-                        Authorization: `Bearer ${localStorage.getItem("token")}`,
-                    },
-                    body: JSON.stringify({
-                        model: model,
-                        prompt: user_prompt,
-                    }),
-                });
+                const new_message = await fetch(
+                    apiUrl + "/chat/" + chat_id + "/message",
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Access-Control-Allow-Origin": "*",
+                            Authorization: `Bearer ${localStorage.getItem(
+                                "token"
+                            )}`,
+                        },
+                        body: JSON.stringify({
+                            model: model,
+                            prompt: user_prompt,
+                        }),
+                    }
+                );
                 const chat = await new_message.json();
                 setRespList(chat);
 

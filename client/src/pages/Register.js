@@ -11,7 +11,7 @@ const Register = () => {
     const apiUrl = process.env.REACT_APP_API_ENDPOINT;
 
     useEffect(() => {
-        const token = localStorage.getItem('token');
+        const token = localStorage.getItem("token");
         setIsLoggedIn(!!token);
     }, [setIsLoggedIn]);
 
@@ -46,7 +46,14 @@ const Register = () => {
             {isLoggedIn ? (
                 <>
                     <p>You are already logged in.</p>
-                    <button onClick={() => { localStorage.removeItem('token'); setIsLoggedIn(false); }}>Logout</button>
+                    <button
+                        onClick={() => {
+                            localStorage.removeItem("token");
+                            setIsLoggedIn(false);
+                        }}
+                    >
+                        Logout
+                    </button>
                     <br />
                     <button onClick={() => navigate("/")}>Back to Home</button>
                 </>
@@ -69,7 +76,9 @@ const Register = () => {
                                 <input
                                     type="password"
                                     value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
+                                    onChange={(e) =>
+                                        setPassword(e.target.value)
+                                    }
                                     required
                                 />
                             </label>
@@ -77,7 +86,9 @@ const Register = () => {
                             <button type="submit">Register</button>
                         </form>
                         <br />
-                        <button onClick={() => navigate("/")}>Back to Home</button>
+                        <button onClick={() => navigate("/")}>
+                            Back to Home
+                        </button>
                     </div>
                 </>
             )}
