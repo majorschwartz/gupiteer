@@ -1,21 +1,21 @@
 import React from "react";
 import loading from "../imgs/load.gif";
 
-const Response = ({ user, response, model }) => {
+const Response = ({ role, model="Model unavailable", content }) => {
     return (
-        <div className={"resp" + (user ? " user" : " system")}>
-            {!user && (
+        <div className={`resp${role === "user" ? " user" : " system"}`}>
+            {(role !== "user") && (
                 <div className="info-section">
                     <span className="model-tag">{model}</span>
                 </div>
             )}
-            {!response && (
+            {!content && (
                 <div className="loading">
                     <img src={loading} alt="loading" />
                 </div>
             )}
-            {response && (
-                <pre className="response">{response}</pre>
+            {content && (
+                <pre className="response">{content}</pre>
             )}
         </div>
     );

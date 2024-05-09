@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useKeys } from "../providers/KeyContext";
 import { useNavigate, useParams } from "react-router-dom";
-// import { useAuth } from "../providers/AuthContext";
+import { useAuth } from "../providers/AuthContext";
 
 const PromptBox = ({
     model,
@@ -13,7 +13,7 @@ const PromptBox = ({
     const navigate = useNavigate();
     const { keys } = useKeys();
     const { chat_id } = useParams();
-    // const { isLoggedIn } = useAuth();
+    const { isLoggedIn } = useAuth();
 
     const apiUrl = process.env.REACT_APP_API_ENDPOINT;
 
@@ -30,6 +30,7 @@ const PromptBox = ({
                 });
                 const data = await chat_info.json();
                 console.log("Chat Info: ", data);
+                setRespList(data.chat);
             }
         }
         getChatInfo();
@@ -38,29 +39,52 @@ const PromptBox = ({
     async function call_api(event) {
         event.preventDefault();
 
-        try {
-            const new_chat = await fetch(apiUrl + "/chat/create", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Access-Control-Allow-Origin": "*",
-                    Authorization: `Bearer ${localStorage.getItem("token")}`,
-                },
-                body: JSON.stringify({
-                    model: model,
-                    prompt: prompt,
-                    keys: keys,
-                }),
-            });
-            const data = await new_chat.json();
-            console.log("New Chat Response: ", data);
-            navigate("/chat/" + data.chat_id);
+        if (isLoggedIn && !chat_id) {
+            try {
+                const new_chat = await fetch(apiUrl + "/chat/create", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Access-Control-Allow-Origin": "*",
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                    body: JSON.stringify({
+                        model: model,
+                        prompt: prompt,
+                    }),
+                });
+                const data = await new_chat.json();
+                console.log("New Chat Response: ", data);
+                navigate("/chat/" + data.chat_id);
+            }
+            catch (e) {
+                console.log(e);
+                console.log("\n\nError creating new chat.\n\n");
+            }
+        };
+
+        if (isLoggedIn && chat_id) {
+            try {
+                const new_message = await fetch(apiUrl + "/chat/" + chat_id + "/message", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Access-Control-Allow-Origin": "*",
+                        Authorization: `Bearer ${localStorage.getItem("token")}`,
+                    },
+                    body: JSON.stringify({
+                        model: model,
+                        prompt: prompt,
+                        keys: keys,
+                    }),
+                });
+                const data = await new_message.json();
+                console.log("Message Response: ", data);
+            } catch (e) {
+                console.log(e);
+                console.log("\n\nError sending chat message.\n\n");
+            }
         }
-        catch (e) {
-            console.log(e);
-            console.log("\n\nError sending fetch request.\n\n");
-        }
-        
 
         // var givenPrompt = {
         //     user: true,

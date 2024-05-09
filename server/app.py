@@ -41,11 +41,12 @@ chat_collection = database["chats"]
 ### Helper functions
 
 
-# Printing request function
-def print_request(request):
+# Printing generation function
+def print_info(model, prompt, chat_len):
     print(
-        f"\n| Model: {request['model']}\n| Prompt: {request['prompt']}\n| Chat Count: {len(request['respList'])}\n| Keys: {request['keys']}\n"
+        f"\n| Model: {model}\n| Prompt: {prompt}\n| Prev Chat Count: {str(chat_len)}\n"
     )
+
 
 # Checking for special keys
 def check_special(keys):
@@ -67,6 +68,7 @@ def check_special(keys):
             }
     return keys
 
+
 # Utility function to convert ObjectId fields
 def convert_object_ids(obj):
     if isinstance(obj, dict):
@@ -76,37 +78,51 @@ def convert_object_ids(obj):
     else:
         return obj
 
+
 # Updating API keys
 def update_api_keys(user_id, keys):
     user_collection.update_one({"_id": user_id}, {"$set": {"api_keys": keys}})
 
 
+#Add to conversation in database
+def add_to_conversation(chat_id, role, model, content):
+    message = {
+        'role': role,
+        'model': model,
+        'content': content,
+        'created_at': datetime.datetime.now(datetime.UTC)
+    }
+    chat_collection.update_one(
+        {'_id': ObjectId(chat_id)},
+        {'$push': {'chat': message}}
+    )
+
+
 ### Main LLM prompting
 
 
-def prompt_gpt(model="gpt-3.5-turbo", prompt="", respList=[], keys=None):
+def prompt_llm(current_user=None, model="gpt-3.5-turbo", prompt="", chat=[]):
+    if not current_user:
+        return {'role': 'system', 'model': model, 'content': 'User not found.', 'created_at': datetime.datetime.now(datetime.UTC)}
+    
+    keys = check_special(current_user.get("api_keys"))
+
+    super_context = "You are a chatbot. I will provide the previous chat messages below from our conversation. **IMPORTANT: DO NOT ADD PREFIXES TO YOUR RESPONSE (I.E. 'System' or 'Response'). ONLY RESPOND WITH YOUR RESPONSE AND NO PREFIX.**\n\n"
+    previous_context = "Previous chat messages:\n\n"
+
+    for message in chat:
+        previous_context += f"{message['role'].upper()}: {message['content']}\n"
+    
+    total_context = super_context + previous_context + "\n\nNew Prompt: " + prompt
+
+    print_info(model, prompt, len(chat))
+
     try:
-        keys = check_special(keys)
-
-        super_context = "You are a chatbot. I will provide previous chat content below from our conversation. **IMPORTANT: DO NOT ADD PREFIXES TO YOUR RESPONSE (I.E. 'GPT Response', or 'Response'). ONLY RESPOND WITH YOUR RESPONSE AND NO PREFIX.**\n\n"
-        previous_context = "Previous chat content:\n"
-        if len(respList) > 0:
-            for i in range(len(respList)):
-                if respList[i]["user"]:
-                    previous_context += f"*User*: " + respList[i]["response"] + "\n"
-                else:
-                    previous_context += f"*System*: " + respList[i]["response"] + "\n"
-
-        print(previous_context)
-        total_context = super_context + previous_context + "\nNew Prompt: " + prompt
-
-        # Getting response
+        # Prompting the LLM
 
         # OpenAI
         if model in ["gpt-3.5-turbo", "gpt-4", "gpt-4-32k", "gpt-4-0125-preview"]:
-            openai_key = keys["openai-key"]
-
-            openaiClient = OpenAI(api_key=openai_key)
+            openaiClient = OpenAI(api_key=keys["openai-key"])
 
             completion = openaiClient.chat.completions.create(
                 messages=[
@@ -150,23 +166,11 @@ def prompt_gpt(model="gpt-3.5-turbo", prompt="", respList=[], keys=None):
             )
             response = completion.content[0].text
 
-        generated_response = {"user": False, "response": response, "model": model}
+        print(f"\nGenerated response:\n{response}\n")
+        return response
 
     except Exception as e:
-        error_response = {
-            "user": False,
-            "response": "An error has occurred. Make sure you've entered a valid API key, and try again.",
-            "model": model,
-        }
-        final_list = respList.copy()
-        final_list.append(error_response)
-        return final_list
-
-    print(f"Generated response:\n{generated_response['response']}\n")
-
-    final_list = respList.copy()
-    final_list.append(generated_response)
-    return final_list
+        print(e)
 
 
 ### Key routes
@@ -191,8 +195,7 @@ def update_keys(current_user):
 @token_required()
 def get_keys(current_user):
     try:
-        user = user_collection.find_one({"_id": current_user["_id"]})
-        keys = user.get("api_keys")
+        keys = current_user.get("api_keys")
         return jsonify({"keys": keys}), 200
     except Exception as e:
         print(e)
@@ -222,7 +225,8 @@ def create_chat(current_user):
 @app.route("/chats", methods=["GET"])
 @token_required()
 def get_chats(current_user):
-    chats = list(chat_collection.find({"user_id": current_user["_id"]}))
+    chats = list(chat_collection.find({"user_id": current_user["_id"]},
+                 {"_id": 1, "created_at": 1}))
     if not chats:
         return jsonify({"error": "No chats found."}), 404
     chats = [convert_object_ids(chat) for chat in chats]
@@ -246,54 +250,51 @@ def get_chat(current_user, chat_id):
 @app.route('/chat/<chat_id>/message', methods=['POST'])
 @token_required()
 def add_message(current_user, chat_id):
-
-    # Boilerplate code to add a message to a chat
-    # To be implemented later
-
     chat = chat_collection.find_one({"_id": ObjectId(chat_id)})
+
     if chat:
         if chat['user_id'] != current_user['_id']:
             return jsonify({'error': 'Unauthorized access.'}), 401
+        
         data = request.get_json()
-        new_message = {
-            'role': data['role'],
-            'content': data['content'],
-            'timestamp': datetime.datetime.now(datetime.UTC)
-        }
-        result = chat_collection.update_one(
-            {'_id': ObjectId(chat_id)},
-            {'$push': {'messages': new_message}}
-        )
-        if result.matched_count:
-            return jsonify({'message': 'Message added successfully.'})
+        model, prompt = data.get('model'), data.get('prompt')
+        
+        add_to_conversation(chat_id, 'user', model, prompt)
+
+        generation = prompt_llm(current_user, model, prompt, chat['chat'])
+
+        add_to_conversation(chat_id, 'system', model, generation)
+
+        return jsonify({'message': 'Message added successfully.'})
+    
     return jsonify({'error': 'Chat not found.'}), 404
 
 
-
+##### DEPRECATED #####
 # LLM request route
-@app.route("/submit", methods=["POST"])
-@token_required(optional=True)
-def submit_data(current_user=None):
-    try:
-        data = request.get_json()
-        model = data.get("model", "gpt-3.5-turbo")
-        prompt = data.get("prompt", "")
-        respList = data.get("respList")
-        keys = data.get("keys")
+# @app.route("/submit", methods=["POST"])
+# @token_required(optional=True)
+# def submit_data(current_user=None):
+#     try:
+#         data = request.get_json()
+#         model = data.get("model", "gpt-3.5-turbo")
+#         prompt = data.get("prompt", "")
+#         respList = data.get("respList")
+#         keys = data.get("keys")
 
-        if current_user:
-            update_api_keys(current_user["_id"], keys)
+#         if current_user:
+#             update_api_keys(current_user["_id"], keys)
 
-        print_request(
-            {"model": model, "prompt": prompt, "respList": respList, "keys": keys}
-        )
+#         print_request(
+#             {"model": model, "prompt": prompt, "respList": respList, "keys": keys}
+#         )
 
-        gen_response = prompt_gpt(model, prompt, respList, keys)
+#         gen_response = prompt_gpt(model, prompt, respList, keys)
 
-        return jsonify(gen_response)
-    except Exception as e:
-        print(e)
-        return e
+#         return jsonify(gen_response)
+#     except Exception as e:
+#         print(e)
+#         return e
 
 
 ### Login / register routes
