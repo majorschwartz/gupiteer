@@ -1,19 +1,20 @@
-import React, { useEffect } from "react";
-import { useKeys } from "../providers/KeyContext";
+import React, { useState, useEffect } from "react";
+// import { useKeys } from "../providers/KeyContext";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../providers/AuthContext";
 
 const PromptBox = ({
     model,
-    prompt,
-    setPrompt,
+    // prompt,
+    // setPrompt,
     respList,
     setRespList,
 }) => {
     const navigate = useNavigate();
-    const { keys } = useKeys();
+    // const { keys } = useKeys();
     const { chat_id } = useParams();
     const { isLoggedIn } = useAuth();
+    const [prompt, setPrompt] = useState("");
 
     const apiUrl = process.env.REACT_APP_API_ENDPOINT;
 
@@ -34,10 +35,34 @@ const PromptBox = ({
             }
         }
         getChatInfo();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [apiUrl, chat_id]);
+
+    useEffect(() => {
+        if (!chat_id) {
+            console.log("Clearing chat.");
+            setRespList([]);
+        }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [chat_id])
 
     async function call_api(event) {
         event.preventDefault();
+
+        setRespList([...respList, {
+            'role': 'user',
+            'content': prompt,
+            'model': model,
+        }, {
+            'role': 'system',
+            'content': false,
+            'model': model,
+        }]);
+
+        const user_prompt = structuredClone(prompt);
+        console.log("Emptying prompt.");
+        setPrompt("");
 
         if (isLoggedIn && !chat_id) {
             try {
@@ -50,7 +75,7 @@ const PromptBox = ({
                     },
                     body: JSON.stringify({
                         model: model,
-                        prompt: prompt,
+                        prompt: user_prompt,
                     }),
                 });
                 const data = await new_chat.json();
@@ -74,72 +99,18 @@ const PromptBox = ({
                     },
                     body: JSON.stringify({
                         model: model,
-                        prompt: prompt,
-                        keys: keys,
+                        prompt: user_prompt,
                     }),
                 });
-                const data = await new_message.json();
-                console.log("Message Response: ", data);
+                const chat = await new_message.json();
+                setRespList(chat);
+
+                console.log("Message Response: ", chat);
             } catch (e) {
                 console.log(e);
                 console.log("\n\nError sending chat message.\n\n");
             }
         }
-
-        // var givenPrompt = {
-        //     user: true,
-        //     response: prompt,
-        //     model: model,
-        // };
-        // var pending = {
-        //     user: false,
-        //     response: false,
-        //     model: model,
-        // };
-
-        // var responses = structuredClone(respList);
-        // responses.push(givenPrompt);
-        // var pending_list = structuredClone(responses);
-        // pending_list.push(pending);
-        // setRespList(pending_list);
-
-        // try {
-        //     console.log(
-        //         "\nModel: " +
-        //             model +
-        //             "\nPrompt: " +
-        //             prompt +
-        //             "\n\n"
-        //     );
-
-        //     if (responses.length === 1) {
-        //         console.log("New chat.");
-        //     }
-            
-        //     const response = await fetch(apiUrl + "/submit", {
-        //         method: "POST",
-        //         headers: {
-        //             "Content-Type": "application/json",
-        //             "Access-Control-Allow-Origin": "*",
-        //         },
-        //         body: JSON.stringify({
-        //             model: model,
-        //             prompt: prompt,
-        //             respList: responses,
-        //             keys: keys,
-        //         }),
-        //     });
-
-        //     const result = await response.json();
-        //     console.log("Result: ", result);
-
-        //     if (response.ok) {
-        //         setRespList(result);
-        //     }
-        // } catch (e) {
-        //     console.log(e);
-        //     console.log("\n\nError sending fetch request.\n\n");
-        // }
     }
 
     return (
@@ -147,6 +118,7 @@ const PromptBox = ({
             <form onSubmit={call_api} className="prompt-comps">
                 <textarea
                     className="prompt-box"
+                    value={prompt}
                     onChange={(e) => {
                         setPrompt(e.target.value);
                     }}

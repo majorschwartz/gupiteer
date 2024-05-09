@@ -15,7 +15,6 @@ import Chats from "../components/Chats";
 function Main() {
     const [model, setModel] = useState("gpt-3.5-turbo");
     const [respList, setRespList] = useState([]);
-    const [prompt, setPrompt] = useState("");
 
     return (
         <CookiesProvider>
@@ -52,8 +51,6 @@ function Main() {
                                 <div className="column second-column">
                                     <PromptBox
                                         model={model}
-                                        prompt={prompt}
-                                        setPrompt={setPrompt}
                                         respList={respList}
                                         setRespList={setRespList}
                                     />

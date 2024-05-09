@@ -216,6 +216,16 @@ def create_chat(current_user):
             "chat": [],
         }
         chat_id = chat_collection.insert_one(new_chat).inserted_id
+
+        data = request.get_json()
+        model, prompt = data.get('model'), data.get('prompt')
+
+        add_to_conversation(chat_id, 'user', model, prompt)
+
+        generation = prompt_llm(current_user, model, prompt, [])
+
+        add_to_conversation(chat_id, 'system', model, generation)
+
         return jsonify({"chat_id": str(chat_id)}), 201
     except Exception as e:
         return jsonify({"error": "Failed to create chat."}), 400
@@ -265,7 +275,9 @@ def add_message(current_user, chat_id):
 
         add_to_conversation(chat_id, 'system', model, generation)
 
-        return jsonify({'message': 'Message added successfully.'})
+        new_chat = chat_collection.find_one({"_id": ObjectId(chat_id)})
+
+        return jsonify(new_chat['chat'])
     
     return jsonify({'error': 'Chat not found.'}), 404
 
