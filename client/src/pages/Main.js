@@ -46,7 +46,28 @@ function Main() {
                                 </div>
                             </div>
                         </div>
+                        <div className="right-primary">
+                            <main className="main-section">
+                                {/* <div className="menu-toggle">
+                                    <button className="menu-button">
+                                        <span className="menu-obj-wrapper">
+                                            <div className="obj-center">
+                                                <div className="obj-alignment">
+                                                    <div className="menu-button top" />
+                                                    <div className="menu-button buttom" />
+                                                </div>
+                                            </div>
+                                        </span>
+                                    </button>
+                                </div> */}
 
+
+                                <div className="main-content">
+                                    
+
+                                </div>
+                            </main>
+                        </div>
 
 
                         <div>

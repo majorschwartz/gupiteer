@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 const Title = () => {
     return (
         <Link to={"/"} className="title-new-wrap">
-            <div className="title">avale.ai</div>
+            <div className="title">name.</div>
             <div className="new-chat-wrap">
                 <span>
                     <div>
