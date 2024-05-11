@@ -60,21 +60,32 @@ function Main() {
                                         </span>
                                     </button>
                                 </div> */}
-
-
                                 <div className="main-content">
-                                    
+                                    <div className="conversation-section">
+                                        <div className="relative-full">
+                                            <div className="inner-convo-banner">
+                                                <div className="convo-wrap">
+                                                    <div className="inner-convo-content">
+                                                        <div className="chat-interactive-bar">
+                                                        <ModelDrop
+                                                            model={model}
+                                                            setModel={setModel}
+                                                        />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="prompt-section">
 
+                                    </div>
                                 </div>
                             </main>
                         </div>
 
 
                         <div>
-                            <ModelDrop
-                                model={model}
-                                setModel={setModel}
-                            />
                             <Auth />
                             <ResponseBox respList={respList} />
                             <PromptBox
