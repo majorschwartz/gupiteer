@@ -9,7 +9,7 @@ const Modal = ({ shown, setShown }) => {
     }
 
     return (
-        <div className={"modal" + (shown ? " shown" : " hidden")}>
+        <div className={"modal" + (shown ? " shown" : " hidden")} style={{ display: 'none' }}>
             <div
                 className="modal-background"
                 onClick={() => {

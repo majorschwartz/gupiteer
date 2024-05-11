@@ -9,9 +9,9 @@ const KeySection = () => {
 
     return (
         <>
-            <button className="keys" onClick={toggleModal}>
+            <a className="key-click-wrapper" onClick={toggleModal}>
                 API Keys
-            </button>
+            </a>
             <Modal
                 shown={shown}
                 setShown={setShown}

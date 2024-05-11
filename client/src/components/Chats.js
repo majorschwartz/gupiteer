@@ -25,7 +25,7 @@ const Chats = () => {
             const user_chats = data.chats.sort(
                 (a, b) => new Date(b.created_at) - new Date(a.created_at)
             );
-            console.log("Chats: ", user_chats);
+            console.log("Chats:", user_chats);
             setChats(user_chats);
         }
         if (authChecked) {
@@ -59,52 +59,28 @@ const Chats = () => {
 
     return (
         <>
-            <div className="chat-top-bar">
-                <div className="section-title">Chats</div>
-                <div className="interacts">
-                    <button onClick={deleteChats}>
-                        <svg
-                        role="img"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        width="20px"
-                        height="20px"
-                        >
-                            <path
-                                fill="#000000"
-                                d="M15 2H9c-1.103 0-2 .897-2 2v2H3v2h2v12c0 1.103.897 2 2 2h10c1.103 0 2-.897 2-2V8h2V6h-4V4c0-1.103-.897-2-2-2M9 4h6v2H9zm8 16H7V8h10z"
-                            />
-                        </svg>
-                    </button>
-                    <Link to="/">
-                        <svg
-                            role="img"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 24 24"
-                            width="24px"
-                            height="24px"
-                        >
-                            <path
-                                fill="#000000"
-                                d="M19 11h-6V5h-2v6H5v2h6v6h2v-6h6z"
-                            />
-                        </svg>
-                    </Link>
-                </div>
-            </div>
-            <div className="chats-wrapper">
+            <div className="inner-wrapper">
                 {chats.length !== 0 ? (
                     <>
-                        {chats.map((chat) => (
-                            <div
-                                key={chat._id}
-                                className={`chat-item${
-                                    chat._id === chat_id ? " active-chat" : ""
-                                }`}
-                            >
-                                <Link to={`/chat/${chat._id}`}><div>{chat.title}</div></Link>
-                            </div>
-                        ))}
+                        <div className="chats-header">Chats</div>
+                        <ol className="chat-list">
+                            {chats.map((chat) => (
+                                <li className="chat-item" key={chat._id}>
+                                    <div
+                                        className={`chat-inner-wrap${
+                                            chat._id === chat_id ? " active-chat" : ""
+                                        }`}
+                                    >
+                                        <Link to={`/chat/${chat._id}`} className="chat-link">
+                                            <div className="chat-inner-content">
+                                                {chat.title}
+                                                <div className="chat-fade" />
+                                            </div>
+                                        </Link>
+                                    </div>
+                                </li>
+                            ))}
+                        </ol>
                     </>
                 ) : isLoggedIn ? (
                     <div className="no-chats">

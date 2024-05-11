@@ -30,10 +30,6 @@ export const KeyProvider = ({ children }) => {
             },
             body: JSON.stringify({ keys: newKeys }),
         })
-            .then((response) => response.json())
-            .then((data) => {
-                console.log(data);
-            })
             .catch((error) => {
                 console.error(error);
             });

@@ -33,8 +33,14 @@ const PromptBox = ({
                         },
                     });
                     const data = await chat_info.json();
-                    console.log("Chat Info: ", data);
-                    setRespList(data.chat);
+                    console.log("Chat Info:", data);
+                    if (data.error) {
+                        console.log("Error fetching chat info.");
+                        setRespList([]);
+                        navigate("/");
+                    } else {
+                        setRespList(data.chat);
+                    }
                 } catch (e) {
                     console.log(e);
                     console.log("Error fetching chat info.");

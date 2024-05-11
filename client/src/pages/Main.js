@@ -21,41 +21,46 @@ function Main() {
             <AuthProvider>
                 <KeyProvider>
                     <div className="App">
-                        <div className="flex-container">
-                            <div className="row top-row">
-                                <div className="column first-column">
-                                    <Title />
-                                </div>
-                                <div className="column second-column">
-                                    <div className="bar-options">
-                                        <ModelDrop
-                                            model={model}
-                                            setModel={setModel}
-                                        />
-                                        <Auth />
+                        <div className="left-primary">
+                            <div className="width-height">
+                                <div className="flex-full">
+                                    <div className="flex-wrap">
+                                        <nav className="navigation">
+                                            <div className="title-section">
+                                                <div className="title-bar">
+                                                    <Title />
+                                                </div>
+                                            </div>
+                                            <div className="chat-section">
+                                                <div className="chats-wrap">
+                                                    <div className="chats">
+                                                        <Chats />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div className="options-section">
+                                                <KeySection />
+                                            </div>
+                                        </nav>
                                     </div>
                                 </div>
                             </div>
-                            <div className="row middle-row">
-                                <div className="column first-column">
-                                    <Chats />
-                                </div>
-                                <div className="column second-column">
-                                    <ResponseBox respList={respList} />
-                                </div>
-                            </div>
-                            <div className="row bottom-row">
-                                <div className="column first-column">
-                                    <KeySection />
-                                </div>
-                                <div className="column second-column">
-                                    <PromptBox
-                                        model={model}
-                                        respList={respList}
-                                        setRespList={setRespList}
-                                    />
-                                </div>
-                            </div>
+                        </div>
+
+
+
+                        <div>
+                            <ModelDrop
+                                model={model}
+                                setModel={setModel}
+                            />
+                            <Auth />
+                            <ResponseBox respList={respList} />
+                            <PromptBox
+                                model={model}
+                                respList={respList}
+                                setRespList={setRespList}
+                            />
                         </div>
                     </div>
                 </KeyProvider>
