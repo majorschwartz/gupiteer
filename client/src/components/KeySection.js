@@ -1,21 +1,15 @@
-import React, { useState } from "react";
-import Modal from "./Modal";
+import React from "react";
 
-const KeySection = () => {
-    const [shown, setShown] = useState(false);
+const KeySection = ({ modalShown, setModalShown }) => {
     function toggleModal() {
-        setShown(!shown);
+        setModalShown(!modalShown);
     }
 
     return (
         <>
-            <a className="key-click-wrapper" onClick={toggleModal}>
+            <button className="key-click-wrapper" onClick={toggleModal}>
                 API Keys
-            </a>
-            <Modal
-                shown={shown}
-                setShown={setShown}
-            />
+            </button>
         </>
     );
 };

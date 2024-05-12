@@ -45,37 +45,23 @@ const Login = () => {
     };
 
     return (
-        <div>
-            {isLoggedIn ? (
-                <>
-                    <p>You are already logged in.</p>
-                    <button
-                        onClick={() => {
-                            localStorage.removeItem("token");
-                            setIsLoggedIn(false);
-                        }}
-                    >
-                        Logout
-                    </button>
-                    <br />
-                    <button onClick={() => navigate("/")}>Back to Home</button>
-                </>
-            ) : (
-                <>
-                    <div>
-                        <form onSubmit={handleSubmit}>
-                            <h2>Login</h2>
-                            <label>
-                                Email:
+        <div className="auth-page">
+            <div className="form-wrapper">
+                <div className="auth-title">Login</div>
+                {!isLoggedIn ? (
+                    <>
+                        <form onSubmit={handleSubmit} className="main-form">
+                            <div className="form-line">
+                                <div>Email:</div>
                                 <input
                                     type="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     required
                                 />
-                            </label>
-                            <label>
-                                Password:
+                            </div>
+                            <div className="form-line">
+                                <div>Password:</div>
                                 <input
                                     type="password"
                                     value={password}
@@ -84,17 +70,41 @@ const Login = () => {
                                     }
                                     required
                                 />
-                            </label>
-                            <br />
-                            <button type="submit">Login</button>
+                            </div>
+                            <button className="action-button" type="submit">
+                                Login
+                            </button>
                         </form>
-                        <br />
-                        <button onClick={() => navigate("/")}>
-                            Back to Home
+                        <div className="already-done">
+                            <div>Don't have an account?</div>
+                            <button
+                                className="already-button"
+                                onClick={() => navigate("/register")}
+                            >
+                                Register
+                            </button>
+                        </div>
+                    </>
+                ) : (
+                    <>
+                        <div className="error-banner">
+                            You are already logged in.
+                        </div>
+                        <button
+                            className="action-button"
+                            onClick={() => {
+                                localStorage.removeItem("token");
+                                setIsLoggedIn(false);
+                            }}
+                        >
+                            Logout
                         </button>
-                    </div>
-                </>
-            )}
+                    </>
+                )}
+                <button className="back-to-home" onClick={() => navigate("/")}>
+                    Back to Home
+                </button>
+            </div>
         </div>
     );
 };

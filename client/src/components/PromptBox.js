@@ -61,10 +61,15 @@ const PromptBox = ({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [chat_id]);
 
-    async function call_api(event) {
-        event.preventDefault();
+    async function call_api(e) {
+        e.preventDefault();
 
         if (!prompt) {
+            return;
+        }
+
+        if (!isLoggedIn) {
+            console.log("User is not logged in.");
             return;
         }
 
@@ -141,19 +146,57 @@ const PromptBox = ({
         }
     }
 
+    const handleHeight = (e) => {
+        const element = e.target;
+        element.style.height = "49px";
+        element.style.height = element.scrollHeight + "px";
+    };
+
     return (
-        <div>
-            <form onSubmit={call_api} className="prompt-comps">
-                <textarea
-                    className="prompt-box"
-                    value={prompt}
-                    onChange={(e) => {
-                        setPrompt(e.target.value);
-                    }}
-                    placeholder="Enter your prompt..."
-                ></textarea>
-                <button className="prompt-button">&rarr;</button>
-            </form>
+        <div className="prompt-wrapper">
+            <div className="prompt-bar">
+                <form onSubmit={call_api} className="prompt-comps">
+                    <div className="comp-flex">
+                        <div className="comp-center">
+                            <div className="comps-wrapper">
+                                <textarea
+                                    className="prompt-box"
+                                    value={prompt}
+                                    onChange={(e) => {
+                                        setPrompt(e.target.value);
+                                        handleHeight(e);
+                                    }}
+                                    onKeyDown={(e) => {
+                                        if (e.key === "Enter" && !e.shiftKey) {
+                                            e.preventDefault();
+                                            call_api(e);
+                                        }
+                                    }}
+                                    placeholder="Enter your prompt..."
+                                ></textarea>
+                                <button disabled={!prompt} className="prompt-button">
+                                    <span>
+                                    <svg
+                                        role="img"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        viewBox="0 0 24 24"
+                                        width="24px"
+                                        height="24px"
+                                    >
+                                        <path
+                                            fill="none"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth="2"
+                                            d="m22 2l-7 20l-4-9l-9-4Zm0 0L11 13"
+                                        />
+                                    </svg></span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
     );
 };

@@ -9,7 +9,6 @@ const ModelDrop = ({ model, setModel }) => {
     
     return (
         <div className="model-comps">
-            <div className="model-name">Model:</div>
             <div className="model-select">
                 <select
                     value={model}

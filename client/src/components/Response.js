@@ -4,17 +4,20 @@ import loading from "../imgs/load.gif";
 const Response = ({ role, model = "Model unavailable", content }) => {
     return (
         <div className={`resp${role === "user" ? " user" : " system"}`}>
-            {role !== "user" && (
-                <div className="info-section">
-                    <span className="model-tag">{model}</span>
+            <div className="resp-narrow">
+                <div className={`color-bar${role === "user" ? " user" : " system"}`}>&nbsp;</div>
+                <div className="main-resp">
+                    <div className="tag">{role === "user" ? "You" : model}</div>
+                    <div className="response">
+                        {!content && (
+                            <div className="loading">
+                                <img src={loading} alt="loading" />
+                            </div>
+                        )}
+                        {content && <pre>{content}</pre>}
+                    </div>
                 </div>
-            )}
-            {!content && (
-                <div className="loading">
-                    <img src={loading} alt="loading" />
-                </div>
-            )}
-            {content && <pre className="response">{content}</pre>}
+            </div>
         </div>
     );
 };
