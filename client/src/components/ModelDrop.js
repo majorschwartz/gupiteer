@@ -23,6 +23,7 @@ const ModelDrop = ({ model, setModel }) => {
                         <option disabled={available[0]} value="gpt-4-0125-preview">
                             GPT-4-0125-Preview
                         </option>
+                        <option disabled={available[0]} value="gpt-4o">GPT-4o</option>
                     </optgroup>
 
                     <optgroup label="Anthropic">
