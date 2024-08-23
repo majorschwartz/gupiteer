@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-// import { useKeys } from "../providers/KeyContext";
+import { useKeys } from "../providers/KeyContext";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../providers/AuthContext";
 
@@ -11,7 +11,7 @@ const PromptBox = ({
     setRespList,
 }) => {
     const navigate = useNavigate();
-    // const { keys } = useKeys();
+    const { keys } = useKeys();
     const { chat_id } = useParams();
     const { isLoggedIn } = useAuth();
     const [prompt, setPrompt] = useState("");
@@ -73,6 +73,11 @@ const PromptBox = ({
             return;
         }
 
+        if (!keys["openai-key"] && !keys["gemini-key"] && !keys["anthropic-key"]) {
+            console.log("No keys set.");
+            return;
+        }
+
         setRespList([
             ...respList,
             {
@@ -91,7 +96,7 @@ const PromptBox = ({
         console.log("Emptying prompt.");
         setPrompt("");
 
-        if (isLoggedIn && !chat_id) {
+        if (!chat_id) {
             try {
                 const new_chat = await fetch(apiUrl + "/chat/create", {
                     method: "POST",
@@ -116,7 +121,7 @@ const PromptBox = ({
             }
         }
 
-        if (isLoggedIn && chat_id) {
+        if (chat_id) {
             try {
                 const new_message = await fetch(
                     apiUrl + "/chat/" + chat_id + "/message",

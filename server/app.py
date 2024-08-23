@@ -184,7 +184,7 @@ def prompt_llm(current_user=None, model="gpt-3.5-turbo", prompt="", chat=[], max
         return response
 
     except Exception as e:
-        print(e)
+        return "An error has occurred. Please double-check your API keys and try again."
 
 
 ### Key routes
@@ -224,6 +224,11 @@ def get_keys(current_user):
 @token_required()
 def create_chat(current_user):
     try:
+        data = request.get_json()
+        model, prompt = data.get('model'), data.get('prompt')
+
+        generation = prompt_llm(current_user, model, prompt, [])
+        
         new_chat = {
             "user_id": current_user["_id"],
             "created_at": datetime.datetime.now(datetime.UTC),
@@ -231,16 +236,13 @@ def create_chat(current_user):
         }
         chat_id = chat_collection.insert_one(new_chat).inserted_id
 
-        data = request.get_json()
-        model, prompt = data.get('model'), data.get('prompt')
-
         add_to_conversation(chat_id, 'user', model, prompt)
-
-        generation = prompt_llm(current_user, model, prompt, [])
-
         add_to_conversation(chat_id, 'system', model, generation)
 
-        chat_title = generate_title(current_user, model, prompt)
+        if generation == "An error has occurred. Please double-check your API keys and try again.":
+            chat_title = "System Error"
+        else:
+            chat_title = generate_title(current_user, model, prompt)
 
         chat_collection.update_one(
             {'_id': ObjectId(chat_id)},
@@ -268,7 +270,10 @@ def get_chats(current_user):
 @app.route("/chat/<chat_id>", methods=["DELETE"])
 @token_required()
 def delete_chat(current_user, chat_id):
-    chat = chat_collection.find_one({"_id": ObjectId(chat_id)})
+    try:
+        chat = chat_collection.find_one({"_id": ObjectId(chat_id)})
+    except Exception as e:
+        return jsonify({"error": "Chat not found."}), 404
     if chat:
         if chat["user_id"] != current_user["_id"]:
             return jsonify({"error": "Unauthorized access."}), 401
@@ -289,7 +294,10 @@ def delete_chats(current_user):
 @app.route("/chat/<chat_id>", methods=["GET"])
 @token_required()
 def get_chat(current_user, chat_id):
-    chat = chat_collection.find_one({"_id": ObjectId(chat_id)})
+    try:
+        chat = chat_collection.find_one({"_id": ObjectId(chat_id)})
+    except Exception as e:
+        return jsonify({"error": "Chat not found."}), 404
     if chat:
         if chat["user_id"] != current_user["_id"]:
             return jsonify({"error": "Unauthorized access."}), 401
@@ -302,7 +310,10 @@ def get_chat(current_user, chat_id):
 @app.route('/chat/<chat_id>/message', methods=['POST'])
 @token_required()
 def add_message(current_user, chat_id):
-    chat = chat_collection.find_one({"_id": ObjectId(chat_id)})
+    try:
+        chat = chat_collection.find_one({"_id": ObjectId(chat_id)})
+    except Exception as e:
+        return jsonify({"error": "Chat not found."}), 404
 
     if chat:
         if chat['user_id'] != current_user['_id']:
@@ -317,7 +328,10 @@ def add_message(current_user, chat_id):
 
         add_to_conversation(chat_id, 'system', model, generation)
 
-        new_chat = chat_collection.find_one({"_id": ObjectId(chat_id)})
+        try:
+            new_chat = chat_collection.find_one({"_id": ObjectId(chat_id)})
+        except Exception as e:
+            return jsonify({"error": "Chat not found."}), 404
 
         return jsonify(new_chat['chat'])
     
