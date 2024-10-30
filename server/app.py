@@ -133,7 +133,7 @@ def prompt_llm(current_user=None, model="gpt-3.5-turbo", prompt="", chat=[], max
         # Prompting the LLM
 
         # OpenAI
-        if model in ["gpt-3.5-turbo", "gpt-4", "gpt-4-32k", "gpt-4-0125-preview", "gpt-4o"]:
+        if model in ["gpt-3.5-turbo", "gpt-4", "gpt-4-32k", "gpt-4-0125-preview", "gpt-4o", "o1-mini"]:
             openaiClient = OpenAI(api_key=keys["openai-key"])
 
             completion = openaiClient.chat.completions.create(

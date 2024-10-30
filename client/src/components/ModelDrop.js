@@ -24,6 +24,7 @@ const ModelDrop = ({ model, setModel }) => {
                             GPT-4-0125-Preview
                         </option>
                         <option disabled={available[0]} value="gpt-4o">GPT-4o</option>
+                        <option disabled={available[0]} value="o1-mini">o1 Mini</option>
                     </optgroup>
 
                     <optgroup label="Anthropic">
